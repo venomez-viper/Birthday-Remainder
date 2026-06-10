@@ -22,16 +22,6 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
 
   return (
     <div className={cn("min-h-screen relative overflow-hidden soft-floral-bg")}>
-      {/* Real flower photography softly faded into the corners (blends, never pasted) */}
-      <div
-        className="flower-accent -top-24 -left-24 w-[380px] h-[380px]"
-        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1490750967868-88aa4f44baee?w=600&q=80&auto=format')" }}
-      />
-      <div
-        className="flower-accent -bottom-28 -right-24 w-[420px] h-[420px]"
-        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=600&q=80&auto=format')" }}
-      />
-
       {/* Interactive Floating Petals Canvas */}
       {session && <FloatingPetals />}
 
