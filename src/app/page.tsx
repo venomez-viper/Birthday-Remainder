@@ -35,7 +35,7 @@ import { MarketingNav } from "@/components/layout/MarketingNav"
 // Unsplash images (free, high-res, direct CDN)
 const IMAGES = {
   heroBg:
-    "https://images.unsplash.com/photo-1490750967868-88aa4f44baee?w=1920&q=80&auto=format",
+    "https://images.unsplash.com/photo-1522748906645-95d8adfd52c7?w=1920&q=80&auto=format",
   featureBook:
     "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&q=80&auto=format",
   featureFlowers:

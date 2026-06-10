@@ -15,11 +15,11 @@ const fadeUp = {
 }
 
 const images = [
-  "https://images.unsplash.com/photo-1490750967868-88aa4f44baee?w=1600&q=80&auto=format",
+  "https://images.unsplash.com/photo-1522748906645-95d8adfd52c7?w=1600&q=80&auto=format",
   "https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=1600&q=80&auto=format",
   "https://images.unsplash.com/photo-1457089328109-e5d9bd499191?w=1600&q=80&auto=format",
   "https://images.unsplash.com/photo-1519378058457-4c29a0a2efac?w=1600&q=80&auto=format",
-  "https://images.unsplash.com/photo-1502809929092-871f4f3d72e4?w=1600&q=80&auto=format",
+  "https://images.unsplash.com/photo-1464349153735-7db50ed83c84?w=1600&q=80&auto=format",
 ]
 
 const values = [
