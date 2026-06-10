@@ -111,7 +111,7 @@ export default function PeoplePage() {
         {/* PHYSICAL JOURNAL TABS STICKING OUT THE RIGHT EDGE */}
         <div className="absolute right-0 top-16 translate-x-[100%] flex flex-col gap-2 z-0 font-serif italic text-xs select-none">
           <Link
-            href="/"
+            href="/dashboard"
             className="w-14 py-3 rounded-r-xl border border-stone-400/80 dark:border-stone-850 shadow-md bg-amber-900/20 text-stone-750 dark:text-stone-400 border-l-0 hover:bg-paper-light transition-all duration-300 flex flex-col items-center gap-1 hover:translate-x-1"
           >
             <BookOpen className="w-3.5 h-3.5" />
@@ -119,7 +119,7 @@ export default function PeoplePage() {
           </Link>
 
           <Link
-            href="/?action=add"
+            href="/dashboard?action=add"
             className="w-14 py-3 rounded-r-xl border border-stone-400/80 dark:border-stone-850 shadow-md bg-amber-900/20 text-stone-750 dark:text-stone-400 border-l-0 hover:bg-paper-light transition-all duration-300 flex flex-col items-center gap-1 hover:translate-x-1"
           >
             <Plus className="w-3.5 h-3.5" />

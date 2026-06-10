@@ -1,693 +1,731 @@
 "use client"
 
-import { cn } from "@/lib/utils"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
-
-import { format, differenceInDays, addYears, isBefore, startOfDay, differenceInYears, isThisMonth, isThisWeek } from "date-fns"
-import confetti from "canvas-confetti"
-import {
-  Plus,
-  Settings,
-  BookOpen,
-  Search,
-  CalendarDays,
-  Heart,
-  Sparkles,
-  Clock,
-  ChevronLeft,
-  ChevronRight,
-  Cake,
-  Gift,
-  Users,
-  Leaf
-} from "lucide-react"
+import { useEffect, useRef } from "react"
 import Link from "next/link"
-import { getZodiac } from "@/lib/zodiac"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import BirthdayForm from "@/components/birthdays/BirthdayForm"
-import { BirthdayBookPage } from "@/components/birthdays/BirthdayBookPage"
-import { BirthdayMobileView } from "@/components/birthdays/BirthdayMobileView"
-import { BirthdayDetailDrawer } from "@/components/birthdays/BirthdayDetailDrawer"
-import { AnimatePresence } from "framer-motion"
-import dynamic from "next/dynamic"
-import { BookPage } from "@/components/ui/BookPage"
-import React, { useRef } from "react"
+import { motion, useInView, useScroll, useTransform } from "framer-motion"
+import {
+  BookOpen,
+  Sparkles,
+  Bell,
+  Gift,
+  Heart,
+  Calendar,
+  ArrowRight,
+  Star,
+  Flower2,
+  Check,
+  ChevronDown,
+} from "lucide-react"
 
-const HTMLFlipBook = dynamic(() => import('react-pageflip'), { ssr: false }) as any;
+/* ═══════════════════════════════════════════════════════
+   LANDING PAGE — Birthday Diary
+   A modern, flower-filled marketing page
+   ═══════════════════════════════════════════════════════ */
 
-interface Birthday {
-  id: string
-  name: string
-  date: string
-  notes: string | null
-  relationship: string | null
-  interests: string | null
+// Unsplash images (free, high-res, direct CDN)
+const IMAGES = {
+  heroBg:
+    "https://images.unsplash.com/photo-1490750967868-88aa4f44baee?w=1920&q=80&auto=format",
+  featureBook:
+    "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&q=80&auto=format",
+  featureFlowers:
+    "https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=800&q=80&auto=format",
+  featureCalendar:
+    "https://images.unsplash.com/photo-1506784365847-bbad939e9335?w=800&q=80&auto=format",
+  testimonialBg:
+    "https://images.unsplash.com/photo-1471899236350-e3016bf1e69e?w=1920&q=80&auto=format",
+  ctaBg:
+    "https://images.unsplash.com/photo-1455659817273-f96807779a8a?w=1920&q=80&auto=format",
 }
 
-export default function Home() {
+// Framer motion variants
+const fadeUp = {
+  hidden: { opacity: 0, y: 40 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.25, 0.1, 0.25, 1] as const } },
+}
+
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.8 } },
+}
+
+const stagger = {
+  visible: { transition: { staggerChildren: 0.15 } },
+}
+
+function AnimatedSection({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, margin: "-80px" })
+  return (
+    <motion.div
+      ref={ref}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      variants={stagger}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+const FEATURES = [
+  {
+    icon: BookOpen,
+    title: "Beautiful Diary",
+    desc: "A handcrafted vintage book with real page-flip animations. Every birthday is a page in your story.",
+    image: IMAGES.featureBook,
+    color: "#8b4c5e",
+  },
+  {
+    icon: Sparkles,
+    title: "AI-Powered Wishes",
+    desc: "Gemini AI writes heartfelt, personalized birthday messages in seconds. Choose poetic, funny, or heartfelt.",
+    image: IMAGES.featureFlowers,
+    color: "#c9956b",
+  },
+  {
+    icon: Bell,
+    title: "Smart Reminders",
+    desc: "Never miss a birthday again. Get gentle nudges days before so you can plan the perfect surprise.",
+    image: IMAGES.featureCalendar,
+    color: "#6b8f71",
+  },
+]
+
+const STATS = [
+  { value: "10K+", label: "Birthdays Tracked" },
+  { value: "50K+", label: "Wishes Generated" },
+  { value: "99%", label: "On-Time Reminders" },
+  { value: "4.9★", label: "User Rating" },
+]
+
+const TESTIMONIALS = [
+  {
+    quote: "I've never forgotten a birthday since I started using Birthday Diary. The AI wishes are so thoughtful!",
+    author: "Sarah M.",
+    role: "Event Planner",
+  },
+  {
+    quote: "The vintage book aesthetic makes it a joy to use. It's like having a beautiful journal on my desk.",
+    author: "James L.",
+    role: "Creative Director",
+  },
+  {
+    quote: "Finally an app that combines beauty with function. My family loves the personalized wish cards.",
+    author: "Priya K.",
+    role: "Teacher",
+  },
+]
+
+export default function LandingPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
-  
-  // Data state
-  const [birthdays, setBirthdays] = useState<Birthday[]>([])
-  const [loading, setLoading] = useState(true)
-  const [refreshTrigger, setRefreshTrigger] = useState(0)
-  
-  // Navigation & details state
-  const [selectedBday, setSelectedBday] = useState<Birthday | null>(null)
-  const [isAdding, setIsAdding] = useState(false)
-  const [searchQuery, setSearchQuery] = useState("")
 
-  // Mobile Views state
-  const [mobileTocTab, setMobileTocTab] = useState<"index" | "stats">("index")
-  const [isMobile, setIsMobile] = useState(false)
-
+  // If already logged in, redirect to dashboard
   useEffect(() => {
-    const mq = window.matchMedia("(max-width: 767px)")
-    const update = () => setIsMobile(mq.matches)
-    update()
-    mq.addEventListener("change", update)
-    return () => mq.removeEventListener("change", update)
-  }, [])
-
-  // Page Flip Animation state
-  const bookRef = useRef<any>(null)
-  const [currentSpread, setCurrentSpread] = useState(0) // 0: TOC, 1: Details, 2: Add
-
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/login")
+    if (status === "authenticated") {
+      router.replace("/dashboard")
     }
   }, [status, router])
 
-  useEffect(() => {
-    if (session) {
-      fetchBirthdays()
-    }
-  }, [session, refreshTrigger])
+  const heroRef = useRef(null)
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  })
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, 200])
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0])
 
-  useEffect(() => {
-    if (typeof window !== "undefined" && birthdays.length > 0) {
-      const params = new URLSearchParams(window.location.search)
-      const id = params.get("id")
-      const action = params.get("action")
-      if (id) {
-        const found = birthdays.find(b => b.id === id)
-        if (found) {
-          setSelectedBday(found)
-          setIsAdding(false)
-          setCurrentSpread(1)
-          if (bookRef.current) bookRef.current.pageFlip().turnToPage(2)
-        }
-      } else if (action === "add") {
-        setIsAdding(true)
-        setSelectedBday(null)
-        setCurrentSpread(2)
-        if (bookRef.current) bookRef.current.pageFlip().turnToPage(4)
-      }
-    }
-  }, [birthdays, refreshTrigger])
-
-  const fetchBirthdays = async () => {
-    try {
-      const res = await fetch("/api/birthdays")
-      if (res.ok) {
-        const data = await res.json()
-        setBirthdays(data)
-        if (selectedBday) {
-          const updated = data.find((b: Birthday) => b.id === selectedBday.id)
-          if (updated) setSelectedBday(updated)
-        }
-      }
-    } catch (error) {
-      console.error("Failed to fetch birthdays", error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to remove this journal entry?")) return
-
-    try {
-      const res = await fetch(`/api/birthdays/${id}`, {
-        method: "DELETE",
-      })
-      if (res.ok) {
-        if (bookRef.current) bookRef.current.pageFlip().turnToPage(0)
-        setTimeout(() => {
-          setSelectedBday(null)
-          setIsAdding(false)
-          setCurrentSpread(0)
-          fetchBirthdays()
-        }, 600)
-      }
-    } catch (error) {
-      console.error("Failed to delete", error)
-    }
-  }
-
-  const getNextBirthday = (dateString: string) => {
-    const today = startOfDay(new Date())
-    const birthDate = startOfDay(new Date(dateString))
-    let nextBirthday = new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate())
-    if (isBefore(nextBirthday, today)) {
-      nextBirthday = addYears(nextBirthday, 1)
-    }
-    return nextBirthday
-  }
-
-  const calculateAge = (dateString: string, targetDate: Date) => {
-    const birthDate = new Date(dateString)
-    return differenceInYears(targetDate, birthDate)
-  }
-
-  // Sorting
-  const sortedBirthdays = [...birthdays]
-    .map(b => ({
-      ...b,
-      nextBirthday: getNextBirthday(b.date),
-      daysUntil: differenceInDays(getNextBirthday(b.date), startOfDay(new Date()))
-    }))
-    .sort((a, b) => a.daysUntil - b.daysUntil)
-
-  const todaysBirthdays = sortedBirthdays.filter(b => b.daysUntil === 0)
-  const upcomingBirthdays = sortedBirthdays.filter(b => b.daysUntil > 0)
-  const nextBirthday = sortedBirthdays[0]
-
-  const filteredBirthdays = sortedBirthdays.filter(b => 
-    b.name.toLowerCase().includes(searchQuery.toLowerCase())
-  )
-
-  useEffect(() => {
-    if (todaysBirthdays.length > 0) {
-      const duration = 4 * 1000
-      const end = Date.now() + duration
-
-      const frame = () => {
-        confetti({
-          particleCount: 3,
-          angle: 60,
-          spread: 55,
-          origin: { x: 0 },
-          colors: ['#8b4c5e', '#c9956b', '#d4a9a9', '#a9b8a0']
-        })
-        confetti({
-          particleCount: 3,
-          angle: 120,
-          spread: 55,
-          origin: { x: 1 },
-          colors: ['#8b4c5e', '#c9956b', '#d4a9a9', '#a9b8a0']
-        })
-
-        if (Date.now() < end) {
-          requestAnimationFrame(frame)
-        }
-      }
-      frame()
-    }
-  }, [todaysBirthdays])
-
-  const handleSelectBday = (bday: Birthday) => {
-    setSelectedBday(bday)
-    setIsAdding(false)
-    setCurrentSpread(1)
-    if (bookRef.current) bookRef.current.pageFlip().turnToPage(2)
-  }
-
-  const handleBackToToc = () => {
-    if (bookRef.current) bookRef.current.pageFlip().turnToPage(0)
-    setTimeout(() => {
-      setSelectedBday(null)
-      setIsAdding(false)
-      setCurrentSpread(0)
-      setMobileTocTab("index")
-    }, 600)
-  }
-
-  const handleOpenAdd = () => {
-    setSelectedBday(null)
-    setIsAdding(true)
-    setCurrentSpread(2)
-    if (bookRef.current) bookRef.current.pageFlip().turnToPage(4)
-  }
-
-  const handleSuccess = () => {
-    setRefreshTrigger(prev => prev + 1)
-    handleBackToToc()
-  }
-
-  if (status === "loading" || status === "unauthenticated" || loading) {
+  if (status === "loading") {
     return (
-      <div className="wood-desk min-h-screen flex flex-col justify-center items-center gap-4">
-        <div className="relative">
-          <Clock className="w-10 h-10 animate-spin text-book-gold" />
-        </div>
-        <p className="font-handwritten text-2xl text-book-cream italic">Opening your birthday diary...</p>
-        <div className="flex gap-1 mt-2">
-          {[0, 1, 2].map(i => (
-            <div
-              key={i}
-              className="w-2 h-2 rounded-full bg-book-gold animate-bounce"
-              style={{ animationDelay: `${i * 0.15}s` }}
-            />
-          ))}
-        </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+        >
+          <Flower2 className="w-10 h-10 text-book-gold" />
+        </motion.div>
       </div>
     )
   }
 
-  const totalCount = birthdays.length
-  const averageAge = totalCount > 0 
-    ? Math.round(birthdays.reduce((acc, curr) => acc + calculateAge(curr.date, new Date()), 0) / totalCount)
-    : 0
-  
-  let maxGap = 0
-  if (sortedBirthdays.length > 1) {
-    for (let i = 0; i < sortedBirthdays.length; i++) {
-      const nextIndex = (i + 1) % sortedBirthdays.length
-      const currentBday = sortedBirthdays[i].nextBirthday
-      const nextBday = sortedBirthdays[nextIndex].nextBirthday
-      let gap = differenceInDays(nextBday, currentBday)
-      if (gap < 0) gap += 365
-      if (gap > maxGap) maxGap = gap
-    }
-  }
-
-  const upcomingZodiac = nextBirthday ? getZodiac(nextBirthday.date) : null
-
-  // Computed stats for the new design
-  const birthdaysThisMonth = sortedBirthdays.filter(b => {
-    const nb = b.nextBirthday
-    const now = new Date()
-    return nb.getMonth() === now.getMonth() && nb.getFullYear() === now.getFullYear()
-  }).length
-
-  const birthdaysThisWeek = sortedBirthdays.filter(b => {
-    return b.daysUntil >= 0 && b.daysUntil <= 7
-  }).length
-
-  // No framer motion pageVariants needed
-
-  const today = new Date()
+  if (status === "authenticated") return null
 
   return (
-    <div className={cn(
-      "wood-desk w-full h-full relative",
-      isMobile
-        ? "overflow-y-auto"
-        : "flex flex-col items-center px-3 md:px-6 pt-3 md:pt-5 pb-3 overflow-hidden"
-    )}>
-      {/* ═══════════════════════════════════════════════════════
-          MOBILE VIEW (phones) — clean scrollable layout
-          ═══════════════════════════════════════════════════════ */}
-      {isMobile && (
-        <>
-          <BirthdayMobileView
-            today={today}
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            filteredBirthdays={filteredBirthdays}
-            todaysBirthdays={todaysBirthdays}
-            upcomingBirthdays={upcomingBirthdays}
-            totalCount={totalCount}
-            birthdaysThisMonth={birthdaysThisMonth}
-            birthdaysThisWeek={birthdaysThisWeek}
-            onSelect={handleSelectBday}
-            onAdd={handleOpenAdd}
-          />
-          <AnimatePresence>
-            {selectedBday && (
-              <BirthdayDetailDrawer birthday={selectedBday} onClose={() => setSelectedBday(null)} />
-            )}
-          </AnimatePresence>
-          {isAdding && (
-            <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
-              <div className="absolute inset-0 bg-black/60" onClick={() => setIsAdding(false)} />
-              <div className="relative z-10 w-full sm:max-w-lg max-h-[88vh] overflow-y-auto bg-book-paper rounded-t-2xl sm:rounded-2xl border border-book-border shadow-2xl">
-                <BirthdayForm onSuccess={() => { setRefreshTrigger(prev => prev + 1); setIsAdding(false) }} />
-              </div>
+    <div className="min-h-screen bg-[#faf6f0] text-[#2d2418] overflow-x-hidden">
+      {/* ════════════════════════════════════════════════
+          NAVIGATION BAR
+          ════════════════════════════════════════════════ */}
+      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-lg bg-[#faf6f0]/80 border-b border-[#e8dfd2]">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#8b4c5e] to-[#c9956b] flex items-center justify-center shadow-sm">
+              <Flower2 className="w-5 h-5 text-white" />
             </div>
-          )}
-        </>
-      )}
+            <span className="font-handwritten text-2xl text-[#4a3728]">Birthday Diary</span>
+          </Link>
 
-      {!isMobile && (
-      <>
-      {/* ═══════════════════════════════════════════════════════
-          FLOATING HEADER ABOVE BOOK
-          ═══════════════════════════════════════════════════════ */}
-      <div className="shrink-0 flex flex-col md:flex-row justify-between items-center w-full max-w-5xl mb-3 md:mb-4 gap-2 md:gap-0">
-        {/* LEFT: Logo */}
-        <div className="text-center md:text-left">
-          <h1 className="font-handwritten text-3xl md:text-4xl text-book-cream leading-none">
-            Birthday Diary
-          </h1>
-          <p className="font-serif italic text-book-muted text-xs md:text-sm mt-0.5">
-            Every Birthday, a Beautiful Memory
-          </p>
-        </div>
-
-        {/* CENTER: Search bar */}
-        <div className="relative w-full max-w-xs">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-book-muted" />
-          <input
-            type="text"
-            placeholder="Search names..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 rounded-full border border-book-border bg-book-paper text-book-text placeholder:text-book-muted text-sm font-serif focus:outline-none focus:ring-2 focus:ring-book-gold/50"
-          />
-        </div>
-
-        {/* RIGHT: Today's date */}
-        <div className="flex items-center gap-2 text-book-cream">
-          <ChevronLeft className="w-4 h-4 text-book-muted cursor-pointer hover:text-book-cream transition-colors opacity-50" />
-          <div className="text-center">
-            <span className="font-serif text-sm md:text-base text-book-cream font-medium">
-              {format(today, "MMM dd, yyyy")}
-            </span>
-            <span className="block font-serif text-xs text-book-muted italic">
-              {format(today, "EEEE")}
-            </span>
+          <div className="hidden md:flex items-center gap-8">
+            <a href="#features" className="text-sm font-serif text-[#6b5d4d] hover:text-[#8b4c5e] transition-colors">
+              Features
+            </a>
+            <a href="#how-it-works" className="text-sm font-serif text-[#6b5d4d] hover:text-[#8b4c5e] transition-colors">
+              How It Works
+            </a>
+            <a href="#testimonials" className="text-sm font-serif text-[#6b5d4d] hover:text-[#8b4c5e] transition-colors">
+              Testimonials
+            </a>
           </div>
-          <ChevronRight className="w-4 h-4 text-book-muted cursor-pointer hover:text-book-cream transition-colors opacity-50" />
+
+          <div className="flex items-center gap-3">
+            <Link
+              href="/login"
+              className="text-sm font-serif text-[#6b5d4d] hover:text-[#8b4c5e] transition-colors px-4 py-2"
+            >
+              Sign In
+            </Link>
+            <Link
+              href="/register"
+              className="text-sm font-serif text-white bg-[#8b4c5e] hover:bg-[#7a4252] px-5 py-2.5 rounded-full transition-colors shadow-sm"
+            >
+              Get Started Free
+            </Link>
+          </div>
         </div>
-      </div>
+      </nav>
 
-      {/* ═══════════════════════════════════════════════════════
-          THE BOOK
-          ═══════════════════════════════════════════════════════ */}
-      <div className="relative flex-1 min-h-0 w-full flex items-center justify-center">
-        {/* Book frame — aspect-locked (8:5 spread) so it always fits the viewport */}
-        <div className="relative h-full max-h-full max-w-full aspect-[8/5]">
+      {/* ════════════════════════════════════════════════
+          HERO SECTION
+          ════════════════════════════════════════════════ */}
+      <section ref={heroRef} className="relative min-h-screen flex items-center pt-16 overflow-hidden">
+        {/* Background image */}
+        <motion.div style={{ y: heroY }} className="absolute inset-0 z-0">
+          <img
+            src={IMAGES.heroBg}
+            alt=""
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#faf6f0]/95 via-[#faf6f0]/80 to-[#faf6f0]/40" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#faf6f0] via-transparent to-transparent" />
+        </motion.div>
 
-        {/* Book cover (dark green leather) */}
-        <div className="book-cover flex justify-center items-center p-2 w-full h-full relative z-10">
-          {/* react-pageflip wrapper */}
-          <HTMLFlipBook
-            width={800}
-            height={1000}
-            size="stretch"
-            minWidth={300}
-            maxWidth={1600}
-            minHeight={380}
-            maxHeight={2000}
-            maxShadowOpacity={0.5}
-            showCover={false}
-            mobileScrollSupport={true}
-            className="book-scene mx-auto w-full h-full"
-            ref={bookRef}
-            flippingTime={1000}
-            usePortrait={false}
-          >
-            {/* ══════════════════════════════════════════════
-                SPREAD 1: VIEW 1 - TABLE OF CONTENTS
-                ══════════════════════════════════════════════ */}
-            {/* Page 1 (Left) - INDEX */}
-            <BookPage className="book-page-bg page-shadow-left p-8 md:p-14 flex flex-col pb-10">
-              <div className="floral-corner-tl" />
-              <div className="floral-corner-bl" />
-              
-              <div className="text-center mb-6 mt-4 relative z-10">
-                <h2 className="text-3xl md:text-5xl font-serif font-bold text-book-text tracking-[0.2em] uppercase">
-                  Index
-                </h2>
-                <div className="floral-divider mt-4 scale-90 opacity-80" />
-              </div>
+        <motion.div
+          style={{ opacity: heroOpacity }}
+          className="relative z-10 max-w-7xl mx-auto px-6 py-20 md:py-0 grid md:grid-cols-2 gap-12 items-center"
+        >
+          {/* Left: Copy */}
+          <div className="space-y-8">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#8b4c5e]/10 text-[#8b4c5e] text-xs font-serif tracking-wider uppercase border border-[#8b4c5e]/20">
+                <Sparkles className="w-3.5 h-3.5" />
+                Now with Gemini AI
+              </span>
+            </motion.div>
 
-              <div className="flex-1 overflow-y-auto pr-4 space-y-2 md:space-y-3 scrollbar-thin relative z-10 mt-6">
-                {totalCount === 0 ? (
-                  <div className="text-center py-16">
-                    <p className="text-lg md:text-xl text-book-muted font-serif italic mb-6">Your diary is empty.</p>
-                    <Button onClick={handleOpenAdd} size="lg" className="bg-book-accent hover:bg-book-accent/90 text-white rounded-full font-serif text-lg px-8 py-6">
-                      Add First Birthday
-                    </Button>
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="text-5xl md:text-7xl font-handwritten text-[#2d2418] leading-[1.1]"
+            >
+              Never forget a{" "}
+              <span className="text-[#8b4c5e]">blooming</span>{" "}
+              birthday again
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="text-lg md:text-xl font-serif text-[#6b5d4d] leading-relaxed max-w-lg"
+            >
+              A gorgeous vintage diary that remembers every birthday,
+              crafts AI-powered wishes, and makes sure you&apos;re always
+              the most thoughtful person in the room.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+              className="flex flex-col sm:flex-row gap-4"
+            >
+              <Link
+                href="/register"
+                className="group inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-[#8b4c5e] text-white font-serif text-lg shadow-lg shadow-[#8b4c5e]/25 hover:bg-[#7a4252] hover:shadow-xl hover:shadow-[#8b4c5e]/30 transition-all"
+              >
+                Start Your Diary
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <a
+                href="#features"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full border-2 border-[#d4c5a9] text-[#4a3728] font-serif text-lg hover:bg-[#f0e9dc] transition-all"
+              >
+                See How It Works
+              </a>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.2, duration: 0.8 }}
+              className="flex items-center gap-6 pt-2"
+            >
+              <div className="flex -space-x-2">
+                {["🌸", "🌺", "🌷", "💐"].map((emoji, i) => (
+                  <div
+                    key={i}
+                    className="w-10 h-10 rounded-full bg-[#f0e4cc] border-2 border-white flex items-center justify-center text-base shadow-sm"
+                  >
+                    {emoji}
                   </div>
-                ) : filteredBirthdays.length === 0 ? (
-                  <p className="text-lg text-book-muted font-serif italic py-12 text-center">
-                    No names match your search.
-                  </p>
-                ) : (
-                  filteredBirthdays.map((b) => {
-                    const isToday = b.daysUntil === 0
-                    return (
-                      <div 
-                        key={b.id} 
-                        onClick={() => handleSelectBday(b)} 
-                        className={cn(
-                          "flex items-center text-lg md:text-xl font-serif cursor-pointer group transition-all duration-200 py-2 px-3 rounded-md", 
-                          isToday ? "bg-book-sage/70 shadow-sm" : "hover:bg-book-cream/50"
-                        )}
-                      >
-                        {isToday ? (
-                          <Cake className="w-4 h-4 mr-3 shrink-0 text-book-accent" />
-                        ) : (
-                          <span className="w-1.5 h-1.5 rounded-full bg-book-muted/50 mr-3 shrink-0 group-hover:bg-book-accent transition-colors" />
-                        )}
-                        <span className="font-medium text-book-text group-hover:text-book-accent transition-colors truncate">{b.name}</span>
-                        <span className="dotted-leader opacity-50" />
-                        <span className="text-book-muted text-base md:text-lg whitespace-nowrap">{format(new Date(b.date), "MMM dd")}</span>
-                      </div>
-                    )
-                  })
-                )}
+                ))}
               </div>
-              
-              <div className="mt-8 pt-4 relative z-10 pl-6 md:pl-10">
-                <p className="font-handwritten text-book-muted text-lg md:text-xl italic text-left leading-relaxed max-w-[250px]">
-                  Good friends are like stars.<br/>
-                  You don&apos;t always see them,<br/>
-                  but you know they&apos;re always there.
+              <div>
+                <div className="flex gap-0.5 text-[#c9956b]">
+                  {Array(5).fill(null).map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-current" />
+                  ))}
+                </div>
+                <p className="text-sm font-serif text-[#9a8b7a] mt-0.5">
+                  Loved by 10,000+ thoughtful people
                 </p>
-                <div className="mt-3 flex justify-start opacity-50">
-                  <Leaf className="w-4 h-4 text-book-muted" />
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Right: Visual */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, rotateY: -10 }}
+            animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+            transition={{ duration: 1, delay: 0.5 }}
+            className="hidden md:block relative"
+          >
+            <div className="relative mx-auto w-[480px]">
+              {/* Decorative background shape */}
+              <div className="absolute -inset-8 rounded-[2rem] bg-gradient-to-br from-[#f0e4cc]/60 to-[#e8deca]/40 -rotate-3" />
+              <div className="absolute -inset-4 rounded-[2rem] bg-gradient-to-br from-[#faf3e6]/80 to-[#f0e9dc]/60 rotate-1" />
+
+              {/* Main book mockup card */}
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-[#2d2418]/20 border border-[#d4c5a9]/50">
+                <img
+                  src={IMAGES.featureBook}
+                  alt="Birthday Diary book"
+                  className="w-full h-[420px] object-cover"
+                />
+                {/* Overlay card */}
+                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-[#2d2418]/90 via-[#2d2418]/50 to-transparent p-8 pt-20">
+                  <p className="font-handwritten text-3xl text-[#faf3e6] leading-tight">
+                    &ldquo;Every birthday,<br />a beautiful memory&rdquo;
+                  </p>
                 </div>
               </div>
-            </BookPage>
 
-            {/* Page 2 (Right) - CELEBRATIONS & STATS */}
-            <BookPage className="book-page-bg page-shadow-right p-8 md:p-14 flex flex-col pb-10">
-              <div className="floral-corner-tr" />
-              <div className="floral-corner-br" />
-              
-              <div className="space-y-6 relative z-10 flex-1 flex flex-col">
-                {/* Top Section: Celebrations Today */}
-                <div className="text-center relative pt-8 pb-4">
-                  <div className="relative z-10">
-                    <p className="text-[10px] uppercase font-serif text-book-muted tracking-[0.2em] mb-4">Celebrations Today</p>
-                    {todaysBirthdays.length > 0 ? (
-                      todaysBirthdays.map(b => (
-                        <div key={b.id} className="cursor-pointer group" onClick={() => handleSelectBday(b)}>
-                          <div className="flex items-center justify-center gap-4">
-                            <Heart className="w-5 h-5 text-book-accent/40 group-hover:text-book-accent transition-colors" />
-                            <h3 className="font-handwritten text-6xl md:text-8xl text-book-accent font-bold group-hover:scale-105 transition-transform drop-shadow-sm">
-                              {b.name}
-                            </h3>
-                            <Heart className="w-5 h-5 text-book-accent/40 group-hover:text-book-accent transition-colors" />
-                          </div>
-                          <div className="flex items-center justify-center gap-3 mt-4 opacity-80">
-                            <Leaf className="w-4 h-4 text-book-accent/70" />
-                            <span className="font-serif text-book-text font-bold text-xl md:text-2xl tracking-wide">
-                              {format(new Date(b.date), "MMM dd")}
-                            </span>
-                            <Leaf className="w-4 h-4 text-book-accent/70 -scale-x-100" />
-                          </div>
+              {/* Floating badges */}
+              <motion.div
+                animate={{ y: [0, -8, 0] }}
+                transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                className="absolute -top-4 -right-4 bg-white rounded-2xl shadow-xl p-4 border border-[#e8dfd2]"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-[#8b4c5e]/10 flex items-center justify-center">
+                    <Sparkles className="w-5 h-5 text-[#8b4c5e]" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-serif text-[#9a8b7a]">AI Wish Ready</p>
+                    <p className="text-sm font-serif font-semibold text-[#4a3728]">Birthday in 3 days!</p>
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div
+                animate={{ y: [0, -6, 0] }}
+                transition={{ repeat: Infinity, duration: 5, ease: "easeInOut", delay: 1 }}
+                className="absolute -bottom-4 -left-6 bg-white rounded-2xl shadow-xl p-4 border border-[#e8dfd2]"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-[#c9956b]/10 flex items-center justify-center">
+                    <Gift className="w-5 h-5 text-[#c9956b]" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-serif text-[#9a8b7a]">Gift Idea</p>
+                    <p className="text-sm font-serif font-semibold text-[#4a3728]">Pressed flower journal</p>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
+        </motion.div>
+
+        {/* Scroll indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2 }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
+        >
+          <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2 }}>
+            <ChevronDown className="w-6 h-6 text-[#9a8b7a]" />
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* ════════════════════════════════════════════════
+          STATS BAR
+          ════════════════════════════════════════════════ */}
+      <section className="relative z-10 bg-white border-y border-[#e8dfd2]">
+        <AnimatedSection className="max-w-7xl mx-auto px-6 py-16 grid grid-cols-2 md:grid-cols-4 gap-8">
+          {STATS.map((s, i) => (
+            <motion.div key={i} variants={fadeUp} className="text-center">
+              <p className="text-4xl md:text-5xl font-handwritten text-[#8b4c5e]">{s.value}</p>
+              <p className="text-sm font-serif text-[#9a8b7a] mt-1 tracking-wider uppercase">{s.label}</p>
+            </motion.div>
+          ))}
+        </AnimatedSection>
+      </section>
+
+      {/* ════════════════════════════════════════════════
+          FEATURES SECTION
+          ════════════════════════════════════════════════ */}
+      <section id="features" className="py-24 md:py-32 bg-[#faf6f0]">
+        <AnimatedSection className="max-w-7xl mx-auto px-6">
+          <motion.div variants={fadeUp} className="text-center max-w-2xl mx-auto mb-20">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#c9956b]/10 text-[#c9956b] text-xs font-serif tracking-wider uppercase border border-[#c9956b]/20 mb-6">
+              <Heart className="w-3.5 h-3.5" />
+              Crafted with love
+            </span>
+            <h2 className="text-4xl md:text-5xl font-handwritten text-[#2d2418] mb-6">
+              Everything you need to be{" "}
+              <span className="text-[#8b4c5e]">the most thoughtful</span>
+            </h2>
+            <p className="text-lg font-serif text-[#6b5d4d] leading-relaxed">
+              More than a reminder app — it&apos;s your personal birthday concierge,
+              wrapped in the warmth of a handcrafted vintage diary.
+            </p>
+          </motion.div>
+
+          <div className="space-y-32">
+            {FEATURES.map((f, i) => {
+              const Icon = f.icon
+              const isReversed = i % 2 !== 0
+              return (
+                <AnimatedSection key={i}>
+                  <div className={`grid md:grid-cols-2 gap-16 items-center ${isReversed ? "md:[direction:rtl]" : ""}`}>
+                    {/* Image */}
+                    <motion.div variants={fadeUp} className="md:[direction:ltr]">
+                      <div className="relative group">
+                        <div
+                          className="absolute -inset-4 rounded-3xl opacity-20 blur-2xl transition-opacity group-hover:opacity-30"
+                          style={{ backgroundColor: f.color }}
+                        />
+                        <div className="relative rounded-2xl overflow-hidden shadow-xl">
+                          <img
+                            src={f.image}
+                            alt={f.title}
+                            className="w-full h-[380px] object-cover transition-transform duration-700 group-hover:scale-105"
+                          />
                         </div>
-                      ))
-                    ) : nextBirthday ? (
-                      <div className="cursor-pointer group" onClick={() => handleSelectBday(nextBirthday)}>
-                         <div className="flex items-center justify-center gap-4">
-                            <Heart className="w-5 h-5 text-book-accent/40 group-hover:text-book-accent transition-colors" />
-                            <h3 className="font-handwritten text-6xl md:text-8xl text-book-accent font-bold group-hover:scale-105 transition-transform drop-shadow-sm">
-                              {nextBirthday.name}
-                            </h3>
-                            <Heart className="w-5 h-5 text-book-accent/40 group-hover:text-book-accent transition-colors" />
-                          </div>
-                          <div className="flex items-center justify-center gap-3 mt-4 opacity-80">
-                            <Leaf className="w-4 h-4 text-book-accent/70" />
-                            <span className="font-serif text-book-text font-bold text-xl md:text-2xl tracking-wide">
-                              {format(new Date(nextBirthday.date), "MMM dd")}
-                            </span>
-                            <Leaf className="w-4 h-4 text-book-accent/70 -scale-x-100" />
-                          </div>
                       </div>
-                    ) : (
-                      <div className="py-6">
-                        <p className="font-handwritten text-4xl text-book-muted italic">No upcoming birthdays...</p>
+                    </motion.div>
+
+                    {/* Copy */}
+                    <motion.div variants={fadeUp} className="space-y-6 md:[direction:ltr]">
+                      <div
+                        className="w-14 h-14 rounded-2xl flex items-center justify-center"
+                        style={{ backgroundColor: `${f.color}15` }}
+                      >
+                        <Icon className="w-7 h-7" style={{ color: f.color }} />
                       </div>
-                    )}
+                      <h3 className="text-3xl md:text-4xl font-handwritten text-[#2d2418]">
+                        {f.title}
+                      </h3>
+                      <p className="text-lg font-serif text-[#6b5d4d] leading-relaxed">
+                        {f.desc}
+                      </p>
+                      <Link
+                        href="/register"
+                        className="inline-flex items-center gap-2 text-sm font-serif font-semibold tracking-wider uppercase hover:gap-3 transition-all"
+                        style={{ color: f.color }}
+                      >
+                        Learn More <ArrowRight className="w-4 h-4" />
+                      </Link>
+                    </motion.div>
+                  </div>
+                </AnimatedSection>
+              )
+            })}
+          </div>
+        </AnimatedSection>
+      </section>
+
+      {/* ════════════════════════════════════════════════
+          HOW IT WORKS
+          ════════════════════════════════════════════════ */}
+      <section id="how-it-works" className="py-24 md:py-32 bg-white">
+        <AnimatedSection className="max-w-7xl mx-auto px-6">
+          <motion.div variants={fadeUp} className="text-center max-w-2xl mx-auto mb-20">
+            <h2 className="text-4xl md:text-5xl font-handwritten text-[#2d2418] mb-6">
+              Three steps to{" "}
+              <span className="text-[#c9956b]">never forgetting</span>
+            </h2>
+            <p className="text-lg font-serif text-[#6b5d4d]">
+              Set it up in under a minute. Your diary does the rest.
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                step: "01",
+                icon: BookOpen,
+                title: "Open Your Diary",
+                desc: "Create your free account and step into your beautiful vintage birthday book.",
+              },
+              {
+                step: "02",
+                icon: Heart,
+                title: "Add Your People",
+                desc: "Record the birthdays of everyone you care about with notes, interests, and memories.",
+              },
+              {
+                step: "03",
+                icon: Sparkles,
+                title: "Celebrate Perfectly",
+                desc: "Get smart reminders, AI-crafted wishes, and curated gift ideas before every birthday.",
+              },
+            ].map((step, i) => (
+              <motion.div
+                key={i}
+                variants={fadeUp}
+                className="relative group"
+              >
+                <div className="p-8 rounded-2xl border border-[#e8dfd2] bg-[#faf6f0] hover:shadow-xl hover:shadow-[#8b4c5e]/5 transition-all duration-500 h-full">
+                  <div className="flex items-center gap-4 mb-6">
+                    <span className="font-handwritten text-5xl text-[#d4c5a9] group-hover:text-[#c9956b] transition-colors">
+                      {step.step}
+                    </span>
+                    <div className="w-12 h-12 rounded-xl bg-[#8b4c5e]/10 flex items-center justify-center group-hover:bg-[#8b4c5e] transition-colors">
+                      <step.icon className="w-6 h-6 text-[#8b4c5e] group-hover:text-white transition-colors" />
+                    </div>
+                  </div>
+                  <h3 className="text-2xl font-handwritten text-[#2d2418] mb-3">{step.title}</h3>
+                  <p className="font-serif text-[#6b5d4d] leading-relaxed">{step.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </AnimatedSection>
+      </section>
+
+      {/* ════════════════════════════════════════════════
+          FULL-BLEED FEATURE SHOWCASE
+          ════════════════════════════════════════════════ */}
+      <section className="relative py-32 overflow-hidden">
+        <img
+          src={IMAGES.testimonialBg}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-[#2d2418]/85" />
+
+        <AnimatedSection className="relative z-10 max-w-4xl mx-auto px-6 text-center">
+          <motion.div variants={fadeUp} className="space-y-8">
+            <h2 className="text-4xl md:text-6xl font-handwritten text-[#faf3e6] leading-tight">
+              More than an app.<br />
+              <span className="text-[#c9956b]">A keepsake.</span>
+            </h2>
+            <p className="text-lg md:text-xl font-serif text-[#d4c5a9] leading-relaxed max-w-2xl mx-auto">
+              Every page is a memory. Every wish is personal. Every notification
+              is a gentle nudge to be the friend, partner, or family member you
+              want to be.
+            </p>
+
+            <div className="grid sm:grid-cols-3 gap-6 pt-8">
+              {[
+                { icon: Gift, label: "Gift Registry", desc: "Track & suggest perfect gifts" },
+                { icon: Calendar, label: "Visual Calendar", desc: "See all birthdays at a glance" },
+                { icon: Sparkles, label: "AI Wishes", desc: "Personalized messages by Gemini" },
+              ].map((item, i) => (
+                <motion.div
+                  key={i}
+                  variants={fadeUp}
+                  className="p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all"
+                >
+                  <item.icon className="w-8 h-8 text-[#c9956b] mx-auto mb-3" />
+                  <p className="font-serif font-semibold text-[#faf3e6] mb-1">{item.label}</p>
+                  <p className="text-sm font-serif text-[#9a8b7a]">{item.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </AnimatedSection>
+      </section>
+
+      {/* ════════════════════════════════════════════════
+          TESTIMONIALS
+          ════════════════════════════════════════════════ */}
+      <section id="testimonials" className="py-24 md:py-32 bg-[#faf6f0]">
+        <AnimatedSection className="max-w-7xl mx-auto px-6">
+          <motion.div variants={fadeUp} className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-handwritten text-[#2d2418] mb-4">
+              What our <span className="text-[#8b4c5e]">friends</span> say
+            </h2>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {TESTIMONIALS.map((t, i) => (
+              <motion.div
+                key={i}
+                variants={fadeUp}
+                className="p-8 rounded-2xl bg-white border border-[#e8dfd2] shadow-sm hover:shadow-lg transition-shadow"
+              >
+                <div className="flex gap-1 text-[#c9956b] mb-5">
+                  {Array(5).fill(null).map((_, j) => (
+                    <Star key={j} className="w-4 h-4 fill-current" />
+                  ))}
+                </div>
+                <p className="font-serif text-[#4a3728] leading-relaxed mb-6 italic">
+                  &ldquo;{t.quote}&rdquo;
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#8b4c5e] to-[#c9956b] flex items-center justify-center text-white font-serif text-sm font-bold">
+                    {t.author[0]}
+                  </div>
+                  <div>
+                    <p className="text-sm font-serif font-semibold text-[#2d2418]">{t.author}</p>
+                    <p className="text-xs font-serif text-[#9a8b7a]">{t.role}</p>
                   </div>
                 </div>
+              </motion.div>
+            ))}
+          </div>
+        </AnimatedSection>
+      </section>
 
-                <div className="flex-1 flex flex-col justify-end space-y-4">
-                  {/* Stats Card */}
-                  <div className="bg-book-card-warm border border-book-line shadow-[2px_2px_8px_rgba(0,0,0,0.1)] rounded-sm p-4 md:p-6 grid grid-cols-3 gap-2">
-                    <div className="text-center border-r border-book-border/20 last:border-0 flex flex-col justify-center">
-                      <Gift className="w-5 h-5 mx-auto mb-2 text-book-accent/70" />
-                      <span className="font-serif text-3xl md:text-4xl text-book-text mb-1">{birthdaysThisMonth}</span>
-                      <span className="text-[10px] md:text-[11px] text-book-muted uppercase font-serif tracking-wider leading-tight">Birthdays<br/>This Month</span>
-                    </div>
-                    <div className="text-center border-r border-book-border/20 last:border-0 flex flex-col justify-center">
-                      <Cake className="w-5 h-5 mx-auto mb-2 text-book-accent/70" />
-                      <span className="font-serif text-3xl md:text-4xl text-book-text mb-1">{birthdaysThisWeek}</span>
-                      <span className="text-[10px] md:text-[11px] text-book-muted uppercase font-serif tracking-wider leading-tight">Celebrations<br/>This Week</span>
-                    </div>
-                    <div className="text-center border-r border-book-border/20 last:border-0 flex flex-col justify-center">
-                      <Users className="w-5 h-5 mx-auto mb-2 text-book-accent/70" />
-                      <span className="font-serif text-3xl md:text-4xl text-book-text mb-1">{totalCount}</span>
-                      <span className="text-[10px] md:text-[11px] text-book-muted uppercase font-serif tracking-wider leading-tight">Friends in<br/>Your Diary</span>
-                    </div>
-                  </div>
+      {/* ════════════════════════════════════════════════
+          PRICING / FREE TIER
+          ════════════════════════════════════════════════ */}
+      <section className="py-24 md:py-32 bg-white">
+        <AnimatedSection className="max-w-3xl mx-auto px-6 text-center">
+          <motion.div variants={fadeUp} className="space-y-8">
+            <h2 className="text-4xl md:text-5xl font-handwritten text-[#2d2418]">
+              Completely <span className="text-[#c9956b]">free</span>. Always.
+            </h2>
+            <p className="text-lg font-serif text-[#6b5d4d] max-w-xl mx-auto">
+              Birthday Diary is a passion project built with love. Every feature
+              is free — no hidden fees, no premium tiers, no catches.
+            </p>
 
-                  {/* Quote Banner */}
-                  <div className="bg-book-sage border border-book-sage-line shadow-[2px_2px_8px_rgba(0,0,0,0.1)] rounded-sm p-5 md:p-6 text-center relative overflow-hidden">
-                    <p className="font-handwritten text-book-text text-xl md:text-2xl italic leading-relaxed">
-                      Every birthday is a reminder<br/>to celebrate life and the people<br/>who make it special.
-                    </p>
-                    <Heart className="w-3.5 h-3.5 mx-auto mt-3 text-book-accent/50" />
-                  </div>
-
-                  {/* Upcoming Birthdays Section */}
-                  <div className="bg-book-card border border-book-line shadow-[2px_2px_8px_rgba(0,0,0,0.1)] rounded-sm p-5 md:p-6">
-                    <div className="flex items-center justify-center gap-3 mb-4">
-                      <span className="h-px w-6 bg-book-border" />
-                      <span className="text-[11px] uppercase font-serif tracking-[0.2em] text-book-muted">Upcoming Birthdays</span>
-                      <span className="h-px w-6 bg-book-border" />
-                    </div>
-                    
-                    <div className="space-y-3">
-                      {upcomingBirthdays.slice(0, 2).map(b => (
-                        <div key={b.id} className="flex items-center gap-4 cursor-pointer hover:bg-book-cream/50 p-2 rounded transition-colors" onClick={() => handleSelectBday(b)}>
-                          <div className="border border-book-line bg-book-cream rounded-sm w-12 h-12 flex flex-col items-center justify-center shrink-0 shadow-sm">
-                            <span className="text-[8px] uppercase tracking-wider text-book-muted font-serif leading-none mt-1">{format(new Date(b.date), "MMM")}</span>
-                            <span className="text-xl font-serif text-book-text leading-tight">{format(new Date(b.date), "dd")}</span>
-                          </div>
-                          <div className="flex-1 min-w-0 flex flex-col justify-center">
-                            <span className="font-serif font-bold text-book-text text-sm md:text-base truncate">{b.name}</span>
-                            <span className="font-serif text-book-muted text-xs md:text-sm truncate">
-                              {format(new Date(b.date), "EEEE, dd MMMM")}
-                            </span>
-                          </div>
-                          <ChevronRight className="w-4 h-4 text-book-muted/60 shrink-0" />
-                        </div>
-                      ))}
-                      {upcomingBirthdays.length === 0 && (
-                        <p className="text-xs text-book-muted italic text-center font-serif">No upcoming birthdays found.</p>
-                      )}
-                    </div>
-                  </div>
-                </div>
+            <div className="p-8 md:p-12 rounded-3xl bg-[#faf6f0] border border-[#e8dfd2] text-left max-w-lg mx-auto">
+              <div className="flex items-baseline gap-2 mb-6">
+                <span className="text-5xl font-handwritten text-[#8b4c5e]">$0</span>
+                <span className="font-serif text-[#9a8b7a]">/ forever</span>
               </div>
-            </BookPage>
+              <ul className="space-y-4">
+                {[
+                  "Unlimited birthdays",
+                  "AI-powered wishes by Gemini",
+                  "Gift registry & tracking",
+                  "Beautiful flip-book diary",
+                  "Visual calendar view",
+                  "Zodiac & personality insights",
+                ].map((item, i) => (
+                  <li key={i} className="flex items-center gap-3 font-serif text-[#4a3728]">
+                    <Check className="w-5 h-5 text-[#6b8f71] shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/register"
+                className="mt-8 w-full inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-[#8b4c5e] text-white font-serif text-lg shadow-lg shadow-[#8b4c5e]/25 hover:bg-[#7a4252] transition-all"
+              >
+                Start Your Diary <ArrowRight className="w-5 h-5" />
+              </Link>
+            </div>
+          </motion.div>
+        </AnimatedSection>
+      </section>
 
-            {/* ══════════════════════════════════════════════
-                SPREAD 2: VIEW 3 - BIRTHDAY DETAIL
-                ══════════════════════════════════════════════ */}
-            {/* Page 3 (Left) - Profile Portal Mount */}
-            <BookPage className="book-page-bg page-shadow-left">
-              <div id="profile-portal-mount" className="w-full h-full relative" />
-            </BookPage>
+      {/* ════════════════════════════════════════════════
+          FINAL CTA
+          ════════════════════════════════════════════════ */}
+      <section className="relative py-32 overflow-hidden">
+        <img
+          src={IMAGES.ctaBg}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#8b4c5e]/90 to-[#c9956b]/80" />
 
-            {/* Page 4 (Right) - Details Portal Mount */}
-            <BookPage className="book-page-bg page-shadow-right">
-              <div id="details-portal-mount" className="w-full h-full relative" />
-            </BookPage>
+        <AnimatedSection className="relative z-10 max-w-3xl mx-auto px-6 text-center">
+          <motion.div variants={fadeUp} className="space-y-8">
+            <h2 className="text-4xl md:text-6xl font-handwritten text-white leading-tight">
+              Ready to remember<br />every birthday?
+            </h2>
+            <p className="text-lg font-serif text-white/80 max-w-xl mx-auto">
+              Join thousands of thoughtful people who never miss a birthday.
+              It takes 30 seconds to get started.
+            </p>
+            <Link
+              href="/register"
+              className="group inline-flex items-center gap-2 px-10 py-5 rounded-full bg-white text-[#8b4c5e] font-serif text-lg font-semibold shadow-2xl hover:shadow-3xl hover:scale-105 transition-all"
+            >
+              Open Your Free Diary
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </motion.div>
+        </AnimatedSection>
+      </section>
 
-            {/* ══════════════════════════════════════════════
-                SPREAD 3: VIEW 2 - ADD NEW ENTRY
-                ══════════════════════════════════════════════ */}
-            {/* Page 5 (Left) - Add Context */}
-            <BookPage className="book-page-bg page-shadow-left p-6 md:p-10 flex flex-col justify-between">
-              <div className="floral-corner-tl" />
-              <div className="floral-corner-bl" />
-              <div className="relative z-10 space-y-6">
-                <button onClick={handleBackToToc} className="flex items-center gap-1.5 text-sm text-book-muted hover:text-book-text transition-colors font-serif italic group">
-                  <ChevronLeft className="w-4 h-4 transition-transform duration-300 group-hover:-translate-x-1" />
-                  Cancel Entry
-                </button>
-                <div className="space-y-4 mt-4">
-                  <h2 className="font-handwritten text-4xl text-book-text font-bold">Add a New Entry</h2>
-                  <div className="floral-divider" />
-                  <p className="text-sm text-book-muted font-serif italic leading-relaxed">Record the birthday of someone who fills your world with joy.</p>
-                </div>
+      {/* ════════════════════════════════════════════════
+          FOOTER
+          ════════════════════════════════════════════════ */}
+      <footer className="bg-[#2d2418] py-16">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#8b4c5e] to-[#c9956b] flex items-center justify-center">
+                <Flower2 className="w-5 h-5 text-white" />
               </div>
-            </BookPage>
+              <span className="font-handwritten text-2xl text-[#faf3e6]">Birthday Diary</span>
+            </div>
 
-            {/* Page 6 (Right) - Form */}
-            <BookPage className="book-page-bg page-shadow-right p-6 md:p-10">
-              <div className="floral-corner-tr" />
-              <div className="floral-corner-br" />
-              <div className="relative z-10 h-full">
-                <BirthdayForm onSuccess={handleSuccess} />
-              </div>
-            </BookPage>
-          </HTMLFlipBook>
-          
-          {/* External BirthdayBookPage render (Portals its content into Spread 2) */}
-          {selectedBday && (
-            <BirthdayBookPage
-              birthday={selectedBday}
-              onBack={handleBackToToc}
-              onUpdate={fetchBirthdays}
-              onDelete={handleDelete}
-            />
-          )}
+            <div className="flex items-center gap-8">
+              <Link href="/login" className="text-sm font-serif text-[#9a8b7a] hover:text-[#faf3e6] transition-colors">
+                Sign In
+              </Link>
+              <Link href="/register" className="text-sm font-serif text-[#9a8b7a] hover:text-[#faf3e6] transition-colors">
+                Register
+              </Link>
+              <a href="#features" className="text-sm font-serif text-[#9a8b7a] hover:text-[#faf3e6] transition-colors">
+                Features
+              </a>
+            </div>
+          </div>
+
+          <div className="mt-12 pt-8 border-t border-[#4a3728] flex flex-col md:flex-row items-center justify-between gap-4">
+            <p className="text-sm font-serif text-[#6b5d4d]">
+              © {new Date().getFullYear()} Birthday Diary. Made with{" "}
+              <Heart className="w-3.5 h-3.5 inline text-[#8b4c5e] fill-[#8b4c5e]" />{" "}
+              for thoughtful people.
+            </p>
+            <p className="text-xs font-serif text-[#6b5d4d]">
+              Photos by{" "}
+              <a href="https://unsplash.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#9a8b7a]">
+                Unsplash
+              </a>
+            </p>
+          </div>
         </div>
-
-        {/* ═══════════════════════════════════════════════════════
-            PHYSICAL TABS (right edge, desktop only)
-            ═══════════════════════════════════════════════════════ */}
-        <div className="hidden md:flex absolute right-0 top-12 translate-x-full flex-col gap-2 z-30">
-          {/* Index Tab */}
-          <button
-            onClick={handleBackToToc}
-            className={cn(
-              "book-tab book-tab-index",
-              !selectedBday && !isAdding && "active"
-            )}
-          >
-            <BookOpen className="w-4 h-4" />
-            <span>Index</span>
-          </button>
-
-          {/* Add New Tab */}
-          <button
-            onClick={handleOpenAdd}
-            className={cn(
-              "book-tab book-tab-add",
-              isAdding && "active"
-            )}
-          >
-            <Plus className="w-4 h-4" />
-            <span>Add New</span>
-          </button>
-
-          {/* Calendar Tab */}
-          <Link
-            href="/calendar"
-            className="book-tab book-tab-calendar"
-          >
-            <CalendarDays className="w-4 h-4" />
-            <span>Calendar</span>
-          </Link>
-
-          {/* Settings Tab */}
-          <Link
-            href="/settings"
-            className="book-tab book-tab-settings"
-          >
-            <Settings className="w-4 h-4" />
-            <span>Settings</span>
-          </Link>
-        </div>
-        </div>
-      </div>
-      </>
-      )}
+      </footer>
     </div>
   )
 }

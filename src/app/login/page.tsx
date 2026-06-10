@@ -26,7 +26,7 @@ export default function Login() {
         return
       }
 
-      router.replace("/")
+      router.replace("/dashboard")
       router.refresh()
     } catch (error) {
       setError("Something went wrong")

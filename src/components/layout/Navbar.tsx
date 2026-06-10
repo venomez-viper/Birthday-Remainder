@@ -21,7 +21,7 @@ export function Navbar() {
   const { data: session } = useSession()
 
   const navItems = [
-    { name: "Dashboard", href: "/", icon: LayoutDashboard },
+    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { name: "Calendar", href: "/calendar", icon: CalendarDays },
     { name: "Constellation", href: "/constellation", icon: Sparkles },
     { name: "People", href: "/people", icon: Users },

@@ -11,6 +11,12 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession()
   const pathname = usePathname()
   const isHomePage = pathname === "/"
+  const isLandingPage = isHomePage && !session
+
+  // Landing page renders without any app chrome
+  if (isLandingPage) {
+    return <>{children}</>
+  }
 
   return (
     <div className={cn("min-h-screen relative overflow-hidden wood-desk")}>
