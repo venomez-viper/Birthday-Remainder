@@ -44,7 +44,7 @@ import {
 } from "@/components/birthdays/DiarySpreads"
 import React, { useRef } from "react"
 
-const HTMLFlipBook = dynamic(() => import('react-pageflip'), { ssr: false }) as any;
+const HTMLFlipBook = dynamic(() => import('@/components/ui/FlipBook'), { ssr: false }) as any;
 
 interface Birthday {
   id: string

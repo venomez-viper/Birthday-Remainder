@@ -262,7 +262,11 @@ export function SettingsProfile({
   profile, onChange,
 }: { profile: Profile; onChange: (p: Partial<Profile>) => void }) {
   return (
-    <div className="h-full flex flex-col">
+    <div
+      className="h-full flex flex-col"
+      onMouseDownCapture={(e) => e.stopPropagation()}
+      onTouchStartCapture={(e) => e.stopPropagation()}
+    >
       <div className="floral-corner-tl" />
       <div className="floral-corner-bl" />
       <PageHeading icon={Heart} title="You" subtitle="Your corner of the diary" />
@@ -302,7 +306,11 @@ export function SettingsPrefs({
   profile, onChange, onSave, saving, onSignOut,
 }: { profile: Profile; onChange: (p: Partial<Profile>) => void; onSave: () => void; saving: boolean; onSignOut: () => void }) {
   return (
-    <div className="h-full flex flex-col">
+    <div
+      className="h-full flex flex-col"
+      onMouseDownCapture={(e) => e.stopPropagation()}
+      onTouchStartCapture={(e) => e.stopPropagation()}
+    >
       <div className="floral-corner-tr" />
       <div className="floral-corner-br" />
       <h3 className="font-handwritten text-3xl text-book-text leading-none border-b border-book-border pb-3 mb-5 relative z-10">Preferences</h3>

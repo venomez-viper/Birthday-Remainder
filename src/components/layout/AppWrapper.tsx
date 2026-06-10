@@ -22,6 +22,9 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
 
   return (
     <div className={cn("min-h-screen relative overflow-hidden soft-floral-bg")}>
+      {/* Soft tiled floral framing the page (faded in the margins, never pasted) */}
+      <div className="floral-layer" />
+
       {/* Interactive Floating Petals Canvas */}
       {session && <FloatingPetals />}
 

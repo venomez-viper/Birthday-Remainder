@@ -99,7 +99,11 @@ export default function BirthdayForm({ onSuccess }: BirthdayFormProps) {
   }
 
   return (
-    <div className="p-4 md:p-6 relative overflow-hidden bg-transparent text-book-text">
+    <div
+      className="p-4 md:p-6 relative overflow-hidden bg-transparent text-book-text"
+      onMouseDownCapture={(e) => e.stopPropagation()}
+      onTouchStartCapture={(e) => e.stopPropagation()}
+    >
       <div className="flex items-center justify-between mb-6 border-b border-book-border/50 pb-4">
         <div className="flex items-center gap-2 text-book-accent">
           <CalendarHeart className="w-6 h-6" />
