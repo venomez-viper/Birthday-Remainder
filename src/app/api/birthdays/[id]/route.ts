@@ -85,6 +85,7 @@ export async function PUT(
         notes,
         relationship,
         interests,
+        imageUrl,
       }
     })
 

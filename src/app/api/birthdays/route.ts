@@ -55,6 +55,7 @@ export async function POST(req: Request) {
         notes,
         relationship,
         interests,
+        imageUrl,
         userId: user.id
       }
     })

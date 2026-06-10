@@ -55,7 +55,7 @@ export default function CalendarPage() {
     return (
       <div className="flex flex-col justify-center items-center min-h-[60vh] gap-3">
         <Clock className="w-8 h-8 animate-spin text-book-gold" />
-        <p className="font-handwritten text-2xl text-book-cream italic">Opening your calendar...</p>
+        <p className="font-handwritten text-2xl text-book-accent italic">Opening your calendar...</p>
       </div>
     )
   }
@@ -91,7 +91,7 @@ export default function CalendarPage() {
     <div className="relative">
       {/* Page heading */}
       <div className="text-center mb-6">
-        <h1 className="font-handwritten text-4xl md:text-5xl text-book-cream leading-none">Calendar</h1>
+        <h1 className="font-handwritten text-4xl md:text-5xl text-book-text leading-none">Calendar</h1>
         <p className="font-serif italic text-book-muted text-sm mt-1">A month-by-month view of every celebration</p>
       </div>
 

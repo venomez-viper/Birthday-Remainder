@@ -73,21 +73,21 @@ const FEATURES = [
   {
     icon: BookOpen,
     title: "Beautiful Diary",
-    desc: "A handcrafted vintage book with real page-flip animations. Every birthday is a page in your story.",
+    desc: "A handcrafted vintage book with real page-turning animations. Every birthday becomes a new page in your story.",
     image: IMAGES.featureBook,
     color: "#8b4c5e",
   },
   {
     icon: Sparkles,
-    title: "AI-Powered Wishes",
-    desc: "Gemini AI writes heartfelt, personalized birthday messages in seconds. Choose poetic, funny, or heartfelt.",
+    title: "Perfect Words",
+    desc: "When you are lost for words, our smart assistant helps you write something deeply personal in seconds. Choose to be poetic, funny, or simply heartfelt.",
     image: IMAGES.featureFlowers,
     color: "#c9956b",
   },
   {
     icon: Bell,
-    title: "Smart Reminders",
-    desc: "Never miss a birthday again. Get gentle nudges days before so you can plan the perfect surprise.",
+    title: "Gentle Reminders",
+    desc: "We will gently let you know days in advance, giving you plenty of time to find a gift or plan the perfect surprise.",
     image: IMAGES.featureCalendar,
     color: "#6b8f71",
   },
@@ -192,14 +192,14 @@ export default function LandingPage() {
           ════════════════════════════════════════════════ */}
       <AnimatedBackground heroImage={IMAGES.heroBg}>
         <HeroSection
-          title1="Never forget a"
-          title2="blooming birthday"
+          title1="Remember every"
+          title2="special day"
           title2Color="#8b4c5e"
-          subtitle="A gorgeous vintage diary that remembers every birthday, crafts AI-powered wishes, and makes sure you're always the most thoughtful person in the room."
+          subtitle="A beautiful vintage diary that keeps track of the dates, helps you find the perfect words to say, and makes sure you are always there for the people you care about."
           ctaText="Start Your Diary"
           ctaLink="/register"
           secondaryText="See How It Works"
-          secondaryLink="/features"
+          secondaryLink="#features"
         />
         {/* Scroll indicator */}
         <motion.div
@@ -243,8 +243,7 @@ export default function LandingPage() {
               <span className="text-[#8b4c5e]">the most thoughtful</span>
             </h2>
             <p className="text-lg font-serif text-[#6b5d4d] leading-relaxed">
-              More than a reminder app — it&apos;s your personal birthday concierge,
-              wrapped in the warmth of a handcrafted vintage diary.
+              It is more than just a place to store dates. It is a digital heirloom that helps you nurture your most cherished relationships, wrapped in the warmth of a handcrafted vintage diary.
             </p>
           </motion.div>
 

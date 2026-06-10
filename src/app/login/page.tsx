@@ -37,7 +37,7 @@ export default function Login() {
     <div className="flex flex-col items-center justify-center min-h-[80vh]">
       <div className="text-center mb-8">
         <Flower2 className="w-12 h-12 text-book-accent mx-auto mb-3" />
-        <h1 className="font-handwritten text-5xl text-book-cream leading-none mb-1">Birthday Diary</h1>
+        <h1 className="font-handwritten text-5xl text-book-text leading-none mb-1">Birthday Diary</h1>
         <p className="font-serif italic text-book-muted">Open your book of memories</p>
       </div>
 

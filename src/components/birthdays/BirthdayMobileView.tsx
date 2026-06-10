@@ -48,11 +48,11 @@ export function BirthdayMobileView({
       {/* Header */}
       <header className="flex items-end justify-between mb-5">
         <div>
-          <h1 className="font-handwritten text-4xl text-book-cream leading-none">Birthday Diary</h1>
+          <h1 className="font-handwritten text-4xl text-book-text leading-none">Birthday Diary</h1>
           <p className="font-serif italic text-book-muted text-xs mt-1">Every birthday, a beautiful memory</p>
         </div>
         <div className="text-right shrink-0">
-          <span className="block font-serif text-sm text-book-cream font-medium">{format(today, "MMM dd")}</span>
+          <span className="block font-serif text-sm text-book-text font-medium">{format(today, "MMM dd")}</span>
           <span className="block font-serif text-[11px] text-book-muted italic">{format(today, "EEEE")}</span>
         </div>
       </header>

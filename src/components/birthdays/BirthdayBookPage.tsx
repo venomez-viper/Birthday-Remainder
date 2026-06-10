@@ -31,6 +31,7 @@ interface Birthday {
   notes: string | null
   relationship: string | null
   interests: string | null
+  imageUrl?: string | null
 }
 
 interface GiftIdea {
@@ -448,10 +449,17 @@ export function BirthdayBookPage({ birthday, onBack, onUpdate, onDelete }: Birth
                   <div className="absolute inset-0 rounded-[50%] border border-book-gold/40" />
                   {/* Inner framed portrait area */}
                   <div className="absolute inset-2 rounded-[50%] border-2 border-book-line bg-book-card shadow-inner flex items-center justify-center overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-book-card-warm opacity-50" />
-                    <span className="font-handwritten text-[7rem] md:text-[9rem] text-book-accent/80 leading-none relative z-10">
-                      {initials}
-                    </span>
+                    {birthday.imageUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={birthday.imageUrl} alt={birthday.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <>
+                        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-book-card-warm opacity-50" />
+                        <span className="font-handwritten text-[7rem] md:text-[9rem] text-book-accent/80 leading-none relative z-10">
+                          {initials}
+                        </span>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>

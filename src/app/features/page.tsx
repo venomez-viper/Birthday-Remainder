@@ -24,9 +24,9 @@ export default function FeaturesPage() {
       <AnimatedBackground className="pt-32 pb-20">
         <div className="max-w-4xl mx-auto px-6 relative z-10">
           <motion.div initial="hidden" animate="visible" variants={fadeUp} className="text-center mb-24">
-            <h1 className="text-6xl md:text-8xl font-handwritten text-[#2d2418] mb-6">Everything you need</h1>
+            <h1 className="text-6xl md:text-8xl font-handwritten text-[#2d2418] mb-6">Inside the Diary</h1>
             <p className="text-xl font-serif text-[#6b5d4d] leading-relaxed max-w-2xl mx-auto">
-              A deep dive into the thoughtfully crafted features that make Birthday Diary special.
+              Discover the careful details and gentle touches that make keeping this diary a truly special experience.
             </p>
           </motion.div>
 
@@ -35,18 +35,18 @@ export default function FeaturesPage() {
             {/* Feature 1 */}
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} className="grid md:grid-cols-2 gap-12 items-center">
               <div className="bg-[#8b4c5e]/5 rounded-3xl p-8 border border-[#8b4c5e]/20 aspect-square flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&q=80&auto=format')] bg-cover bg-center opacity-40 mix-blend-multiply" />
+                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800&q=80&auto=format')] bg-cover bg-center opacity-40 mix-blend-multiply" />
                 <BookOpen className="w-24 h-24 text-[#8b4c5e] relative z-10 drop-shadow-lg" />
               </div>
               <div className="space-y-6">
-                <h2 className="text-4xl font-handwritten text-[#2d2418]">The Vintage Book Experience</h2>
+                <h2 className="text-4xl font-handwritten text-[#2d2418]">A Handcrafted Feel</h2>
                 <p className="text-lg font-serif text-[#6b5d4d] leading-relaxed">
-                  We built a proprietary 3D page-flipping engine that mimics the physical sensation of turning the pages of an old diary. Every friend, family member, and colleague gets their own beautifully typeset page.
+                  We created an authentic reading experience that feels just like holding a real physical book. Every person you care about gets their own beautiful page to celebrate their life.
                 </p>
                 <ul className="space-y-3 font-serif text-[#6b5d4d]">
-                  <li className="flex items-center gap-3"><div className="w-1.5 h-1.5 rounded-full bg-[#8b4c5e]" /> Authentic typography</li>
-                  <li className="flex items-center gap-3"><div className="w-1.5 h-1.5 rounded-full bg-[#8b4c5e]" /> Leather binding aesthetics</li>
-                  <li className="flex items-center gap-3"><div className="w-1.5 h-1.5 rounded-full bg-[#8b4c5e]" /> Paper texture overlays</li>
+                  <li className="flex items-center gap-3"><div className="w-1.5 h-1.5 rounded-full bg-[#8b4c5e]" /> Elegant typography</li>
+                  <li className="flex items-center gap-3"><div className="w-1.5 h-1.5 rounded-full bg-[#8b4c5e]" /> Classic leather aesthetics</li>
+                  <li className="flex items-center gap-3"><div className="w-1.5 h-1.5 rounded-full bg-[#8b4c5e]" /> Rich paper textures</li>
                 </ul>
               </div>
             </motion.div>
@@ -54,18 +54,18 @@ export default function FeaturesPage() {
             {/* Feature 2 */}
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} className="grid md:grid-cols-2 gap-12 items-center md:[direction:rtl]">
               <div className="md:[direction:ltr] bg-[#c9956b]/5 rounded-3xl p-8 border border-[#c9956b]/20 aspect-square flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=800&q=80&auto=format')] bg-cover bg-center opacity-40 mix-blend-multiply" />
+                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1505322022379-7c3353ee6291?w=800&q=80&auto=format')] bg-cover bg-center opacity-40 mix-blend-multiply" />
                 <Sparkles className="w-24 h-24 text-[#c9956b] relative z-10 drop-shadow-lg" />
               </div>
               <div className="space-y-6 md:[direction:ltr]">
-                <h2 className="text-4xl font-handwritten text-[#2d2418]">Gemini AI Wishes</h2>
+                <h2 className="text-4xl font-handwritten text-[#2d2418]">Perfect Words Every Time</h2>
                 <p className="text-lg font-serif text-[#6b5d4d] leading-relaxed">
-                  Writer's block? Our integration with Google's Gemini AI generates personalized, heartfelt, or hilarious birthday messages instantly. Just tell the AI what tone you want.
+                  When you are not sure what to say, our smart assistant helps you find the right words. Whether you want something deeply heartfelt or just a bit funny, we will help you write a beautiful message in seconds.
                 </p>
                 <ul className="space-y-3 font-serif text-[#6b5d4d]">
-                  <li className="flex items-center gap-3"><div className="w-1.5 h-1.5 rounded-full bg-[#c9956b]" /> Context-aware generation</li>
-                  <li className="flex items-center gap-3"><div className="w-1.5 h-1.5 rounded-full bg-[#c9956b]" /> Multiple tone settings (funny, poetic, formal)</li>
-                  <li className="flex items-center gap-3"><div className="w-1.5 h-1.5 rounded-full bg-[#c9956b]" /> Copy to clipboard instantly</li>
+                  <li className="flex items-center gap-3"><div className="w-1.5 h-1.5 rounded-full bg-[#c9956b]" /> Personal and contextual</li>
+                  <li className="flex items-center gap-3"><div className="w-1.5 h-1.5 rounded-full bg-[#c9956b]" /> Easy tone adjustments</li>
+                  <li className="flex items-center gap-3"><div className="w-1.5 h-1.5 rounded-full bg-[#c9956b]" /> Ready to share instantly</li>
                 </ul>
               </div>
             </motion.div>
@@ -73,18 +73,18 @@ export default function FeaturesPage() {
             {/* Feature 3 */}
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} className="grid md:grid-cols-2 gap-12 items-center">
               <div className="bg-[#6b8f71]/5 rounded-3xl p-8 border border-[#6b8f71]/20 aspect-square flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1506784365847-bbad939e9335?w=800&q=80&auto=format')] bg-cover bg-center opacity-40 mix-blend-multiply" />
+                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1516562309708-05f43a08b98b?w=800&q=80&auto=format')] bg-cover bg-center opacity-40 mix-blend-multiply" />
                 <Bell className="w-24 h-24 text-[#6b8f71] relative z-10 drop-shadow-lg" />
               </div>
               <div className="space-y-6">
-                <h2 className="text-4xl font-handwritten text-[#2d2418]">Proactive Reminders</h2>
+                <h2 className="text-4xl font-handwritten text-[#2d2418]">Gentle Reminders</h2>
                 <p className="text-lg font-serif text-[#6b5d4d] leading-relaxed">
-                  A reminder on the day of the birthday is too late. Our smart notification system lets you know days in advance so you can buy a gift or plan a surprise.
+                  We believe a reminder on the actual day is simply too late. We will gently let you know a few days in advance so you have plenty of time to plan a thoughtful surprise.
                 </p>
                 <ul className="space-y-3 font-serif text-[#6b5d4d]">
-                  <li className="flex items-center gap-3"><div className="w-1.5 h-1.5 rounded-full bg-[#6b8f71]" /> Customizable lead times (e.g., 3 days before)</li>
-                  <li className="flex items-center gap-3"><div className="w-1.5 h-1.5 rounded-full bg-[#6b8f71]" /> Visual calendar dashboard</li>
-                  <li className="flex items-center gap-3"><div className="w-1.5 h-1.5 rounded-full bg-[#6b8f71]" /> Push & email notifications</li>
+                  <li className="flex items-center gap-3"><div className="w-1.5 h-1.5 rounded-full bg-[#6b8f71]" /> Advance notice to plan</li>
+                  <li className="flex items-center gap-3"><div className="w-1.5 h-1.5 rounded-full bg-[#6b8f71]" /> Clean visual calendar</li>
+                  <li className="flex items-center gap-3"><div className="w-1.5 h-1.5 rounded-full bg-[#6b8f71]" /> Quiet and unobtrusive alerts</li>
                 </ul>
               </div>
             </motion.div>
