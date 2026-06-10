@@ -11,22 +11,55 @@ datasource db {
 }
 
 model User {
-  id        String     @id @default(cuid())
-  name      String?
-  email     String     @unique
-  password  String
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  birthdays Birthday[]
+  id              String     @id @default(cuid())
+  name            String?
+  email           String     @unique
+  password        String
+  themePreference String     @default("cherry-blossom")
+  reminderDays    Int        @default(1) // days before to remind
+  timezone        String     @default("UTC")
+  avatarUrl       String?
+  ownBirthday     DateTime?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  birthdays       Birthday[]
 }
 
 model Birthday {
-  id        String   @id @default(cuid())
-  name      String
-  date      DateTime
-  notes     String?
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id             String           @id @default(cuid())
+  name           String
+  date           DateTime
+  notes          String?
+  relationship   String?          // e.g., "friend", "family", "colleague"
+  interests      String?          // comma-separated for AI gift generation
+  zodiacSign     String?          // auto-calculated on save
+  userId         String
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  giftIdeas      GiftIdea[]
+  messageHistory MessageHistory[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+model GiftIdea {
+  id         String   @id @default(cuid())
+  birthdayId String
+  birthday   Birthday @relation(fields: [birthdayId], references: [id], onDelete: Cascade)
+  title      String
+  url        String?
+  price      Float?
+  status     String   @default("idea") // "idea", "purchased"
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model MessageHistory {
+  id         String   @id @default(cuid())
+  birthdayId String
+  birthday   Birthday @relation(fields: [birthdayId], references: [id], onDelete: Cascade)
+  year       Int
+  message    String
+  giftGiven  String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }

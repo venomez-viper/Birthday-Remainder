@@ -42,7 +42,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { name, date, notes } = await req.json()
+    const { name, date, notes, relationship, interests } = await req.json()
 
     if (!name || !date) {
       return NextResponse.json({ error: "Name and date are required" }, { status: 400 })
@@ -53,6 +53,8 @@ export async function POST(req: Request) {
         name,
         date: new Date(date),
         notes,
+        relationship,
+        interests,
         userId: user.id
       }
     })

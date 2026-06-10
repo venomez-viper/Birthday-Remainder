@@ -1,9 +1,16 @@
 import type { Metadata } from "next";
-import { Playfair_Display } from "next/font/google";
+import { Cormorant_Garamond, Inter, Caveat } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "@/components/AuthProvider";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { AppWrapper } from "@/components/layout/AppWrapper";
+import { cn } from "@/lib/utils";
 
-const playfair = Playfair_Display({ subsets: ["latin"] });
+const inter = Inter({subsets:['latin'],variable:'--font-sans'});
+
+const playfair = Cormorant_Garamond({ weight: ["400", "500", "600", "700"], subsets: ["latin"], variable: "--font-serif" });
+
+const caveat = Caveat({ weight: ["400", "500", "600", "700"], subsets: ["latin"], variable: "--font-handwritten" });
 
 export const metadata: Metadata = {
   title: "Birthday Diary",
@@ -16,16 +23,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={playfair.className}>
-        <AuthProvider>
-          <div className="diary-page">
-            <div className="absolute top-0 bottom-0 left-8 w-px bg-rose-200 shadow-[2px_0_0_rgba(254,205,211,0.5)] z-0 hidden sm:block"></div>
-            <div className="relative z-10 px-4 sm:px-16 py-8">
-              {children}
-            </div>
-          </div>
-        </AuthProvider>
+    <html lang="en" className={cn("font-sans", inter.variable, playfair.variable, caveat.variable)} suppressHydrationWarning>
+      <body className="font-sans antialiased text-foreground bg-background">
+        <ThemeProvider attribute="class" defaultTheme="cherry-blossom" enableSystem disableTransitionOnChange>
+          <AuthProvider>
+            <AppWrapper>{children}</AppWrapper>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
