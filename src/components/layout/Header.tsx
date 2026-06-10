@@ -23,7 +23,7 @@ export default function Header() {
       </div>
       
       <button 
-        onClick={() => signOut({ callbackUrl: "/login" })}
+        onClick={() => signOut({ callbackUrl: "/" })}
         className="flex items-center gap-2 text-stone-500 hover:text-rose-500 transition-colors text-sm font-medium"
       >
         <LogOut className="w-4 h-4" />

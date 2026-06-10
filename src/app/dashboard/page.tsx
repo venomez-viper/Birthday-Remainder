@@ -374,7 +374,7 @@ export default function Home() {
             birthdaysThisWeek={birthdaysThisWeek}
             onSelect={handleSelectBday}
             onAdd={handleOpenAdd}
-            onSignOut={() => signOut({ callbackUrl: "/login" })}
+            onSignOut={() => signOut({ callbackUrl: "/" })}
           />
           <AnimatePresence>
             {selectedBday && (
@@ -434,7 +434,7 @@ export default function Home() {
           <ChevronRight className="w-4 h-4 text-book-muted cursor-pointer hover:text-book-text transition-colors opacity-50" />
           <button
             type="button"
-            onClick={() => signOut({ callbackUrl: "/login" })}
+            onClick={() => signOut({ callbackUrl: "/" })}
             className="ml-2 inline-flex h-9 w-9 items-center justify-center rounded-full border border-book-border bg-book-paper text-book-text shadow-sm transition-colors hover:bg-book-cream focus:outline-none focus:ring-2 focus:ring-book-gold/50"
             aria-label="Log out"
             title="Log out"
@@ -704,7 +704,7 @@ export default function Home() {
                   onChange={(p) => setProfile({ ...profile, ...p })}
                   onSave={saveProfile}
                   saving={savingProfile}
-                  onSignOut={() => signOut({ callbackUrl: "/login" })}
+                  onSignOut={() => signOut({ callbackUrl: "/" })}
                 />
               )}
             </BookPage>
