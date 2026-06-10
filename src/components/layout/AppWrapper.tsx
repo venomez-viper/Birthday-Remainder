@@ -12,6 +12,8 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const isHomePage = pathname === "/"
   const isLandingPage = isHomePage && !session
+  // The diary book needs the full viewport (no max-width / padding box).
+  const isImmersive = isHomePage || pathname === "/dashboard"
 
   // Landing page renders without any app chrome
   if (isLandingPage) {
@@ -40,14 +42,14 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
       <div
         className={cn(
           "transition-all duration-300",
-          isHomePage
+          isImmersive
             ? "h-screen overflow-hidden"
             : session
               ? "min-h-screen lg:pl-64"
               : "min-h-screen"
         )}
       >
-        {isHomePage ? (
+        {isImmersive ? (
           <div className="relative z-10 w-full h-full">
             {children}
           </div>

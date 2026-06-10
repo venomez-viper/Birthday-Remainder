@@ -4,6 +4,8 @@ import { motion } from "framer-motion"
 import { Footer } from "@/components/layout/Footer"
 import { AnimatedBackground } from "@/components/ui/AnimatedBackground"
 import { Particles } from "@/components/ui/particles"
+import { SparklesText } from "@/components/ui/sparkles-text"
+import { MagicCard } from "@/components/ui/magic-card"
 import Link from "next/link"
 import { ArrowLeft, BookHeart, PenTool } from "lucide-react"
 
@@ -31,38 +33,54 @@ export default function AboutPage() {
           refresh
         />
         <div className="max-w-3xl mx-auto px-6 relative z-10">
-          <motion.div initial="hidden" animate="visible" variants={fadeUp} className="text-center mb-16">
-            <h1 className="text-6xl md:text-8xl font-handwritten text-[#2d2418] mb-6">Our Story</h1>
-            <p className="text-xl font-serif text-[#6b5d4d] leading-relaxed">
+          <motion.div initial="hidden" animate="visible" variants={fadeUp} className="text-center mb-16 flex flex-col items-center">
+            <SparklesText 
+              text="Our Story" 
+              className="text-6xl md:text-8xl font-handwritten text-[#2d2418] mb-6"
+              colors={{ first: "#8b4c5e", second: "#c9956b" }}
+            />
+            <p className="text-xl font-serif text-[#6b5d4d] leading-relaxed mt-4">
               We built Birthday Diary to revive the lost art of remembering.
             </p>
           </motion.div>
 
           <div className="space-y-16">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={fadeUp} className="bg-white/60 backdrop-blur-xl border border-[#e8dfd2] p-8 md:p-12 rounded-3xl shadow-sm">
-              <div className="w-12 h-12 rounded-2xl bg-[#8b4c5e]/10 flex items-center justify-center mb-6">
-                <BookHeart className="w-6 h-6 text-[#8b4c5e]" />
-              </div>
-              <h2 className="text-3xl font-handwritten text-[#2d2418] mb-4">The Problem with Feeds</h2>
-              <p className="font-serif text-[#6b5d4d] text-lg leading-relaxed mb-6">
-                Today, birthdays have become a chore. You get a notification from social media that it's someone's birthday today. You quickly type "HBD!" on their wall and move on. The thoughtfulness is gone.
-              </p>
-              <p className="font-serif text-[#6b5d4d] text-lg leading-relaxed">
-                We wanted something different. Something that feels like flipping through a physical address book. Something that gives you time to plan, to buy a gift, to actually *care*.
-              </p>
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={fadeUp} className="h-full">
+              <MagicCard 
+                className="w-full bg-[#faf6f0]/80 backdrop-blur-xl border-[#e8dfd2] shadow-xl p-8 md:p-12 rounded-3xl"
+                gradientColor="#8b4c5e20"
+                gradientSize={300}
+              >
+                <div className="w-12 h-12 rounded-2xl bg-[#8b4c5e]/10 flex items-center justify-center mb-6 relative z-10">
+                  <BookHeart className="w-6 h-6 text-[#8b4c5e]" />
+                </div>
+                <h2 className="text-4xl font-handwritten text-[#2d2418] mb-4 relative z-10">The Problem with Feeds</h2>
+                <p className="font-serif text-[#6b5d4d] text-lg leading-relaxed mb-6 relative z-10">
+                  Today, birthdays have become a chore. You get a notification from social media that it's someone's birthday today. You quickly type "HBD!" on their wall and move on. The thoughtfulness is gone.
+                </p>
+                <p className="font-serif text-[#6b5d4d] text-lg leading-relaxed relative z-10">
+                  We wanted something different. Something that feels like flipping through a physical address book. Something that gives you time to plan, to buy a gift, to actually *care*.
+                </p>
+              </MagicCard>
             </motion.div>
 
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={fadeUp} className="bg-white/60 backdrop-blur-xl border border-[#e8dfd2] p-8 md:p-12 rounded-3xl shadow-sm">
-              <div className="w-12 h-12 rounded-2xl bg-[#c9956b]/10 flex items-center justify-center mb-6">
-                <PenTool className="w-6 h-6 text-[#c9956b]" />
-              </div>
-              <h2 className="text-3xl font-handwritten text-[#2d2418] mb-4">Craftsmanship in Code</h2>
-              <p className="font-serif text-[#6b5d4d] text-lg leading-relaxed mb-6">
-                Birthday Diary isn't just an app. It's a digital heirloom. We spent months obsessing over typography, paper textures, and page-turning animations so that every time you open it, you feel a sense of calm.
-              </p>
-              <p className="font-serif text-[#6b5d4d] text-lg leading-relaxed">
-                By combining beautiful vintage design with modern AI capabilities, we've created a tool that not only remembers the dates, but helps you find the perfect words to say.
-              </p>
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={fadeUp} className="h-full">
+              <MagicCard 
+                className="w-full bg-[#faf6f0]/80 backdrop-blur-xl border-[#e8dfd2] shadow-xl p-8 md:p-12 rounded-3xl"
+                gradientColor="#c9956b20"
+                gradientSize={300}
+              >
+                <div className="w-12 h-12 rounded-2xl bg-[#c9956b]/10 flex items-center justify-center mb-6 relative z-10">
+                  <PenTool className="w-6 h-6 text-[#c9956b]" />
+                </div>
+                <h2 className="text-4xl font-handwritten text-[#2d2418] mb-4 relative z-10">Craftsmanship in Code</h2>
+                <p className="font-serif text-[#6b5d4d] text-lg leading-relaxed mb-6 relative z-10">
+                  Birthday Diary isn't just an app. It's a digital heirloom. We spent months obsessing over typography, paper textures, and page-turning animations so that every time you open it, you feel a sense of calm.
+                </p>
+                <p className="font-serif text-[#6b5d4d] text-lg leading-relaxed relative z-10">
+                  By combining beautiful vintage design with modern AI capabilities, we've created a tool that not only remembers the dates, but helps you find the perfect words to say.
+                </p>
+              </MagicCard>
             </motion.div>
           </div>
         </div>

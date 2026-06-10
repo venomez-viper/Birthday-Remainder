@@ -3,6 +3,8 @@
 import { motion } from "framer-motion"
 import Link from "next/link"
 import { ArrowRight, Sparkles, Star } from "lucide-react"
+import { SparklesText } from "./sparkles-text"
+import ShimmerButton from "./shimmer-button"
 
 interface HeroSectionProps {
   title1: string
@@ -32,23 +34,17 @@ export function HeroSection({
         
         {/* Large Typography Title */}
         <div className="space-y-1">
-          <motion.h1
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-            className="text-6xl md:text-8xl font-handwritten text-[#2d2418] leading-[0.9] tracking-tight"
-          >
-            {title1}
-          </motion.h1>
-          <motion.h1
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
-            className="text-6xl md:text-8xl font-handwritten leading-[0.9] tracking-tight"
+          <SparklesText 
+            text={title1} 
+            className="text-7xl md:text-9xl lg:text-[10rem] font-handwritten text-[#2d2418] leading-[0.9] tracking-tight"
+            colors={{ first: "#8b4c5e", second: "#c9956b" }}
+          />
+          <SparklesText 
+            text={title2} 
+            className="text-7xl md:text-9xl lg:text-[10rem] font-handwritten leading-[0.9] tracking-tight"
+            colors={{ first: title2Color, second: "#d4c5a9" }}
             style={{ color: title2Color }}
-          >
-            {title2}
-          </motion.h1>
+          />
         </div>
 
         {/* Subtitle */}
@@ -68,16 +64,13 @@ export function HeroSection({
           transition={{ duration: 0.8, delay: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
           className="flex flex-col sm:flex-row gap-4 pt-2"
         >
-          <Link
-            href={ctaLink}
-            className="group relative inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-[#8b4c5e] text-white font-serif text-lg overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-xl shadow-[#8b4c5e]/30"
-          >
-            {/* Button Shine Effect */}
-            <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-            <span className="relative z-10 flex items-center gap-2">
-              {ctaText}
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </span>
+          <Link href={ctaLink} className="w-full sm:w-auto">
+            <ShimmerButton className="w-full px-8 py-4 text-white font-serif text-lg shadow-xl" background="#8b4c5e">
+              <span className="flex items-center gap-2">
+                {ctaText}
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </span>
+            </ShimmerButton>
           </Link>
           <a
             href={secondaryLink}

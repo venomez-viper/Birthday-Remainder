@@ -29,7 +29,7 @@ export function Navbar() {
   ]
 
   if (!session) return null
-  if (pathname === "/") return null
+  if (pathname === "/" || pathname === "/dashboard") return null
 
   const userInitials = session.user?.name
     ? session.user.name
