@@ -133,10 +133,10 @@ export function HeroSection({
           }}
           style={{ transformStyle: "preserve-3d" }}
         >
-          <BorderBeam size={200} duration={12} colorFrom="#8b4c5e" colorTo="#c9956b" />
+          <BorderBeam size={200} duration={12} colorFrom="#8b4c5e" colorTo="#c9956b" borderWidth={2} />
 
           {/* Mockup Header */}
-          <div className="flex items-center justify-between border-b border-[#e8dfd2] pb-4">
+          <div className="relative z-10 flex items-center justify-between border-b border-[#e8dfd2] pb-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-[#8b4c5e]/10 flex items-center justify-center">
                 <CalendarHeart className="w-5 h-5 text-[#8b4c5e]" />
@@ -149,7 +149,7 @@ export function HeroSection({
           </div>
 
           {/* Mockup Content */}
-          <div className="space-y-4 flex-1">
+          <div className="relative z-10 space-y-4 flex-1">
             <div className="bg-[#f0e9dc]/50 rounded-2xl p-4 border border-[#e8dfd2]/50">
               <div className="flex items-center gap-2 mb-2">
                 <Gift className="w-4 h-4 text-[#c9956b]" />
@@ -179,7 +179,7 @@ export function HeroSection({
           </div>
 
           {/* Mockup Footer */}
-          <div className="pt-4 border-t border-[#e8dfd2] flex items-center justify-between">
+          <div className="relative z-10 pt-4 border-t border-[#e8dfd2] flex items-center justify-between">
             <span className="flex items-center gap-1.5 text-xs font-serif text-[#6b5d4d] bg-white px-3 py-1.5 rounded-full shadow-sm">
               <Clock className="w-3.5 h-3.5" />
               Reminder set

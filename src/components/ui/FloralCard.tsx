@@ -67,22 +67,23 @@ export function FloralCard({
           {description}
         </p>
 
-        {/* Optional Image Reveal on Hover */}
+        {/* Image */}
         {image && (
-          <div className="mt-8 relative h-48 rounded-xl overflow-hidden shadow-inner hidden md:block">
-            <div className="absolute inset-0 bg-[#f0e9dc] flex items-center justify-center text-xs font-serif text-[#9a8b7a] italic">
-              Hover to reveal
-            </div>
+          <div className="mt-8 relative h-44 rounded-xl overflow-hidden shadow-sm">
             <motion.img
               src={image}
               alt={title}
-              className="absolute inset-0 w-full h-full object-cover origin-center opacity-0 scale-110 group-hover:opacity-100 group-hover:scale-100 transition-all duration-700"
+              className="absolute inset-0 w-full h-full object-cover scale-100 group-hover:scale-105 transition-transform duration-700"
             />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
           </div>
         )}
-        
+
         {/* Bottom decorative line */}
-        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-transparent to-transparent group-hover:from-transparent group-hover:via-current group-hover:to-transparent opacity-30 transition-all duration-1000" style={{ color }} />
+        <div
+          className="absolute bottom-0 left-0 right-0 h-1 opacity-0 group-hover:opacity-40 transition-opacity duration-700"
+          style={{ background: `linear-gradient(to right, transparent, ${color}, transparent)` }}
+        />
       </div>
     </motion.div>
   )

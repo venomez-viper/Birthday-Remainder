@@ -22,7 +22,7 @@ export function AnimatedBackground({ children, className, heroImage }: AnimatedB
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
 
   return (
-    <div ref={containerRef} className={cn("relative min-h-screen overflow-hidden bg-[#faf6f0]", className)}>
+    <div ref={containerRef} className={cn("relative min-h-screen overflow-hidden bg-[#fbf6f2]", className)}>
       {/* 1. Main Background Image with Parallax */}
       {heroImage && (
         <motion.div 
@@ -35,9 +35,9 @@ export function AnimatedBackground({ children, className, heroImage }: AnimatedB
             className="w-full h-full object-cover object-center"
           />
           {/* Gradient Overlays to blend the image into the page */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#faf6f0]/95 via-[#faf6f0]/80 to-[#faf6f0]/40 mix-blend-normal" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#faf6f0] via-transparent to-transparent" />
-          <div className="absolute inset-0 bg-[#faf6f0]/30 backdrop-blur-[2px]" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#fbf6f2]/95 via-[#fbf6f2]/80 to-[#fbf6f2]/40 mix-blend-normal" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#fbf6f2] via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-[#fbf6f2]/30 backdrop-blur-[2px]" />
         </motion.div>
       )}
 

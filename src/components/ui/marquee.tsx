@@ -1,3 +1,5 @@
+"use client"
+
 import { type ComponentPropsWithoutRef } from "react"
 
 import { cn } from "@/lib/utils"
@@ -31,8 +33,24 @@ interface MarqueeProps extends ComponentPropsWithoutRef<"div"> {
    * @default 4
    */
   repeat?: number
+  /**
+   * Duration of one loop, e.g. "20s"
+   * @default "40s"
+   */
+  duration?: string
+  /**
+   * Gap between items, e.g. "1rem"
+   * @default "1rem"
+   */
+  gap?: string
 }
 
+/**
+ * Tailwind-v3 compatible marquee. The original MagicUI component relied on
+ * v4-only utilities (`gap-(--gap)`, `animate-marquee`) whose keyframes lived in
+ * a v4 `@theme` block, so it never animated under Tailwind v3. This version
+ * injects its own scoped keyframes and uses inline styles for the timing/gap.
+ */
 export function Marquee({
   className,
   reverse = false,
@@ -40,31 +58,50 @@ export function Marquee({
   children,
   vertical = false,
   repeat = 4,
+  duration = "40s",
+  gap = "1rem",
   ...props
 }: MarqueeProps) {
+  const animationName = vertical ? "bd-marquee-vertical" : "bd-marquee-horizontal"
+
   return (
     <div
       {...props}
       className={cn(
-        "group flex gap-(--gap) overflow-hidden p-2 [--duration:40s] [--gap:1rem]",
-        {
-          "flex-row": !vertical,
-          "flex-col": vertical,
-        },
+        "group flex overflow-hidden p-2",
+        vertical ? "flex-col" : "flex-row",
+        pauseOnHover && "[&:hover_*]:[animation-play-state:paused]",
         className
       )}
+      style={{ gap }}
     >
+      <style>{`
+        @keyframes bd-marquee-horizontal {
+          from { transform: translateX(0); }
+          to { transform: translateX(calc(-100% - ${gap})); }
+        }
+        @keyframes bd-marquee-vertical {
+          from { transform: translateY(0); }
+          to { transform: translateY(calc(-100% - ${gap})); }
+        }
+      `}</style>
       {Array(repeat)
         .fill(0)
         .map((_, i) => (
           <div
             key={i}
-            className={cn("flex shrink-0 justify-around gap-(--gap)", {
-              "animate-marquee flex-row": !vertical,
-              "animate-marquee-vertical flex-col": vertical,
-              "group-hover:[animation-play-state:paused]": pauseOnHover,
-              "[animation-direction:reverse]": reverse,
-            })}
+            className={cn(
+              "flex shrink-0 justify-around",
+              vertical ? "flex-col" : "flex-row"
+            )}
+            style={{
+              gap,
+              animationName,
+              animationDuration: duration,
+              animationTimingFunction: "linear",
+              animationIterationCount: "infinite",
+              animationDirection: reverse ? "reverse" : "normal",
+            }}
           >
             {children}
           </div>

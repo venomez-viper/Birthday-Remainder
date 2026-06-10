@@ -1,106 +1,59 @@
 "use client"
 
-import { motion, MotionStyle, Transition } from "motion/react"
+import { motion } from "framer-motion"
 
 import { cn } from "@/lib/utils"
 
 interface BorderBeamProps {
-  /**
-   * The size of the border beam.
-   */
   size?: number
-  /**
-   * The duration of the border beam.
-   */
   duration?: number
-  /**
-   * The delay of the border beam.
-   */
   delay?: number
-  /**
-   * The color of the border beam from.
-   */
   colorFrom?: string
-  /**
-   * The color of the border beam to.
-   */
   colorTo?: string
-  /**
-   * The motion transition of the border beam.
-   */
-  transition?: Transition
-  /**
-   * The class name of the border beam.
-   */
   className?: string
   /**
-   * The style of the border beam.
-   */
-  style?: React.CSSProperties
-  /**
-   * Whether to reverse the animation direction.
-   */
-  reverse?: boolean
-  /**
-   * The initial offset position (0-100).
-   */
-  initialOffset?: number
-  /**
-   * The border width of the beam.
+   * Border width of the animated ring, in px.
    */
   borderWidth?: number
 }
 
+/**
+ * Tailwind-v3 compatible BorderBeam. The original MagicUI version used v4-only
+ * utilities (`mask-*`, `bg-linear-to-*`, `border-(length:--…)`, `offsetPath`)
+ * which render as a solid bar under Tailwind v3. This implementation draws a
+ * thin rotating conic-gradient ring with framer-motion and masks it to a hairline
+ * border using two layered, inset panels, so it works without any v4 utilities.
+ */
 export const BorderBeam = ({
   className,
-  size = 50,
+  size = 200,
   delay = 0,
   duration = 6,
   colorFrom = "#ffaa40",
   colorTo = "#9c40ff",
-  transition,
-  style,
-  reverse = false,
-  initialOffset = 0,
-  borderWidth = 1,
+  borderWidth = 1.5,
 }: BorderBeamProps) => {
   return (
     <div
-      className="pointer-events-none absolute inset-0 rounded-[inherit] border-(length:--border-beam-width) border-transparent mask-[linear-gradient(transparent,transparent),linear-gradient(#000,#000)] mask-intersect [mask-clip:padding-box,border-box]"
-      style={
-        {
-          "--border-beam-width": `${borderWidth}px`,
-        } as React.CSSProperties
-      }
+      className={cn(
+        "pointer-events-none absolute inset-0 rounded-[inherit] overflow-hidden z-0",
+        className
+      )}
     >
       <motion.div
-        className={cn(
-          "absolute aspect-square",
-          "bg-linear-to-l from-(--color-from) via-(--color-to) to-transparent",
-          className
-        )}
-        style={
-          {
-            width: size,
-            offsetPath: `rect(0 auto auto 0 round ${size}px)`,
-            "--color-from": colorFrom,
-            "--color-to": colorTo,
-            ...style,
-          } as MotionStyle
-        }
-        initial={{ offsetDistance: `${initialOffset}%` }}
-        animate={{
-          offsetDistance: reverse
-            ? [`${100 - initialOffset}%`, `${-initialOffset}%`]
-            : [`${initialOffset}%`, `${100 + initialOffset}%`],
+        aria-hidden
+        className="absolute left-1/2 top-1/2 h-[180%] w-[180%] -translate-x-1/2 -translate-y-1/2"
+        style={{
+          background: `conic-gradient(from 0deg, transparent 0deg, ${colorFrom} 40deg, ${colorTo} 90deg, transparent 150deg, transparent 360deg)`,
         }}
-        transition={{
-          repeat: Infinity,
-          ease: "linear",
-          duration,
-          delay: -delay,
-          ...transition,
-        }}
+        animate={{ rotate: 360 }}
+        transition={{ repeat: Infinity, ease: "linear", duration, delay }}
+      />
+      {/* Inset panel masks the gradient down to a thin ring along the border.
+          It matches the card surface so only the rim shows. */}
+      <div
+        className="absolute rounded-[inherit] bg-white/80 backdrop-blur-xl"
+        style={{ inset: borderWidth }}
       />
     </div>
   )

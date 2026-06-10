@@ -21,6 +21,7 @@ import { AnimatedBackground } from "@/components/ui/AnimatedBackground"
 import { HeroSection } from "@/components/ui/HeroSection"
 import { FloralCard } from "@/components/ui/FloralCard"
 import { Footer } from "@/components/layout/Footer"
+import { MarketingNav } from "@/components/layout/MarketingNav"
 
 /* ═══════════════════════════════════════════════════════
    LANDING PAGE — Birthday Diary
@@ -36,7 +37,7 @@ const IMAGES = {
   featureFlowers:
     "https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=800&q=80&auto=format",
   featureCalendar:
-    "https://images.unsplash.com/photo-1506784365847-bbad939e9335?w=800&q=80&auto=format",
+    "https://images.unsplash.com/photo-1457089328109-e5d9bd499191?w=800&q=80&auto=format",
   testimonialBg:
     "https://images.unsplash.com/photo-1471899236350-e3016bf1e69e?w=1920&q=80&auto=format",
   ctaBg:
@@ -131,7 +132,7 @@ export default function LandingPage() {
 
   if (status === "loading") {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#faf6f0]">
+      <div className="min-h-screen flex items-center justify-center bg-[#fbf6f2]">
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
@@ -145,47 +146,8 @@ export default function LandingPage() {
   if (status === "authenticated") return null
 
   return (
-    <div className="min-h-screen bg-[#faf6f0] text-[#2d2418] overflow-x-hidden">
-      {/* ════════════════════════════════════════════════
-          NAVIGATION BAR
-          ════════════════════════════════════════════════ */}
-      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-lg bg-[#faf6f0]/80 border-b border-[#e8dfd2]">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#8b4c5e] to-[#c9956b] flex items-center justify-center shadow-sm">
-              <Flower2 className="w-5 h-5 text-white" />
-            </div>
-            <span className="font-handwritten text-2xl text-[#4a3728]">Birthday Diary</span>
-          </Link>
-
-          <div className="hidden md:flex items-center gap-8">
-            <Link href="/features" className="text-sm font-serif text-[#6b5d4d] hover:text-[#8b4c5e] transition-colors">
-              Features
-            </Link>
-            <Link href="/about" className="text-sm font-serif text-[#6b5d4d] hover:text-[#8b4c5e] transition-colors">
-              Our Story
-            </Link>
-            <Link href="/pricing" className="text-sm font-serif text-[#6b5d4d] hover:text-[#8b4c5e] transition-colors">
-              Pricing
-            </Link>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <Link
-              href="/login"
-              className="text-sm font-serif text-[#6b5d4d] hover:text-[#8b4c5e] transition-colors px-4 py-2"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/register"
-              className="text-sm font-serif text-white bg-[#8b4c5e] hover:bg-[#7a4252] px-5 py-2.5 rounded-full transition-colors shadow-sm"
-            >
-              Get Started Free
-            </Link>
-          </div>
-        </div>
-      </nav>
+    <div className="min-h-screen bg-[#fbf6f2] text-[#2d2418] overflow-x-hidden">
+      <MarketingNav />
 
       {/* ════════════════════════════════════════════════
           HERO SECTION (USING NEW COMPONENT)
@@ -231,7 +193,7 @@ export default function LandingPage() {
       {/* ════════════════════════════════════════════════
           FEATURES SECTION (USING NEW FLORAL CARDS)
           ════════════════════════════════════════════════ */}
-      <section id="features" className="py-24 md:py-32 bg-[#faf6f0] overflow-hidden">
+      <section id="features" className="py-24 md:py-32 bg-[#fbf6f2] overflow-hidden">
         <AnimatedSection className="max-w-7xl mx-auto px-6">
           <motion.div variants={fadeUp} className="text-center max-w-2xl mx-auto mb-20">
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#c9956b]/10 text-[#c9956b] text-xs font-serif tracking-wider uppercase border border-[#c9956b]/20 mb-6">

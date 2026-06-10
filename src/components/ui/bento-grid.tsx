@@ -1,17 +1,17 @@
 import { type ComponentPropsWithoutRef, type ReactNode } from "react"
-import { ArrowRightIcon } from "@radix-ui/react-icons"
+import { ArrowRight } from "lucide-react"
+import Link from "next/link"
 
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
 
 interface BentoGridProps extends ComponentPropsWithoutRef<"div"> {
   children: ReactNode
   className?: string
 }
 
-interface BentoCardProps extends ComponentPropsWithoutRef<"div"> {
+interface BentoCardProps extends Omit<ComponentPropsWithoutRef<"div">, "className"> {
   name: string
-  className: string
+  className?: string
   background: ReactNode
   Icon: React.ElementType
   description: string
@@ -19,11 +19,18 @@ interface BentoCardProps extends ComponentPropsWithoutRef<"div"> {
   cta: string
 }
 
+/**
+ * Tailwind-v3 compatible bento grid. The original MagicUI version used v4-only
+ * `bg-background` (oklch, theme-dependent → opaque clash on the cream page),
+ * defaulted every card to `col-span-3`, and rendered CTAs through the base-ui
+ * Button (`render`/`nativeButton` props). This version is plain Tailwind v3 and
+ * matches the brand palette.
+ */
 const BentoGrid = ({ children, className, ...props }: BentoGridProps) => {
   return (
     <div
       className={cn(
-        "grid w-full auto-rows-[22rem] grid-cols-3 gap-4",
+        "grid w-full grid-cols-1 gap-6 lg:grid-cols-3 auto-rows-[20rem]",
         className
       )}
       {...props}
@@ -44,45 +51,39 @@ const BentoCard = ({
   ...props
 }: BentoCardProps) => (
   <div
-    key={name}
     className={cn(
-      "group relative col-span-3 flex flex-col justify-between overflow-hidden rounded-xl",
-      // light styles
-      "bg-background [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)]",
-      // dark styles
-      "dark:bg-background transform-gpu dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] dark:[border:1px_solid_rgba(255,255,255,.1)]",
+      "group relative flex flex-col justify-end overflow-hidden rounded-2xl",
+      "bg-white/80 backdrop-blur-xl border border-[#ecdfe0]",
+      "shadow-[0_12px_28px_rgba(90,74,82,0.08)] hover:shadow-[0_18px_40px_rgba(139,76,94,0.14)] transition-shadow duration-500",
       className
     )}
     {...props}
   >
-    <div>{background}</div>
-    <div className="p-4">
-      <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-1 transition-all duration-300 lg:group-hover:-translate-y-10">
-        <Icon className="h-12 w-12 origin-left transform-gpu text-neutral-700 transition-all duration-300 ease-in-out group-hover:scale-75" />
-        <h3 className="text-xl font-semibold text-neutral-700 dark:text-neutral-300">
-          {name}
-        </h3>
-        <p className="max-w-lg text-neutral-400">{description}</p>
-      </div>
+    {/* Background image / decoration */}
+    <div className="absolute inset-0 pointer-events-none">{background}</div>
 
-      <div
-        className={cn(
-          "pointer-events-none flex w-full translate-y-0 transform-gpu flex-row items-center transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 lg:hidden"
-        )}
+    {/* Readability gradient */}
+    <div className="absolute inset-0 bg-gradient-to-t from-white via-white/70 to-transparent pointer-events-none" />
+
+    {/* Content */}
+    <div className="relative z-10 p-7 flex flex-col gap-2 transition-transform duration-300 lg:group-hover:-translate-y-10">
+      <div className="w-12 h-12 rounded-xl bg-[#8b4c5e]/10 flex items-center justify-center mb-2 origin-left transition-transform duration-300 group-hover:scale-90">
+        <Icon className="h-6 w-6 text-[#8b4c5e]" />
+      </div>
+      <h3 className="text-2xl font-handwritten text-[#5a4a52]">{name}</h3>
+      <p className="font-serif text-[#8b7a80] leading-relaxed max-w-md">{description}</p>
+    </div>
+
+    {/* CTA revealed on hover (desktop), always shown on mobile */}
+    <div className="relative z-10 px-7 pb-6 -mt-2 lg:absolute lg:bottom-5 lg:left-0 lg:translate-y-6 lg:opacity-0 lg:transition-all lg:duration-300 lg:group-hover:translate-y-0 lg:group-hover:opacity-100">
+      <Link
+        href={href}
+        className="inline-flex items-center gap-1.5 font-serif text-[#8b4c5e] hover:text-[#7a4252] transition-colors"
       >
-        <Button variant="link" size="sm" className="pointer-events-auto p-0" render={<a href={href} />} nativeButton={false}>{cta}<ArrowRightIcon className="ms-2 h-4 w-4 rtl:rotate-180" /></Button>
-      </div>
+        {cta}
+        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+      </Link>
     </div>
-
-    <div
-      className={cn(
-        "pointer-events-none absolute bottom-0 hidden w-full translate-y-10 transform-gpu flex-row items-center p-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 lg:flex"
-      )}
-    >
-      <Button variant="link" size="sm" className="pointer-events-auto p-0" render={<a href={href} />} nativeButton={false}>{cta}<ArrowRightIcon className="ms-2 h-4 w-4 rtl:rotate-180" /></Button>
-    </div>
-
-    <div className="pointer-events-none absolute inset-0 transform-gpu transition-all duration-300 group-hover:bg-black/3 group-hover:dark:bg-neutral-800/10" />
   </div>
 )
 
