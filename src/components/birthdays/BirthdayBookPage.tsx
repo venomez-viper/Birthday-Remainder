@@ -62,7 +62,7 @@ export function BirthdayBookPage({ birthday, onBack, onUpdate, onDelete }: Birth
   const [gifts, setGifts] = useState<GiftIdea[]>([])
   const [history, setHistory] = useState<MessageHistory[]>([])
   const [isEditing, setIsEditing] = useState(false)
-  const [mounted, setMounted] = useState(false)
+  const [portalNodes, setPortalNodes] = useState<{ profile: HTMLElement; details: HTMLElement } | null>(null)
   
   // Edit Form Fields
   const [editName, setEditName] = useState(birthday.name)
@@ -87,7 +87,6 @@ export function BirthdayBookPage({ birthday, onBack, onUpdate, onDelete }: Birth
   const [copied, setCopied] = useState(false)
 
   useEffect(() => {
-    setMounted(true)
     fetchGifts()
     fetchHistory()
     setGeneratedWish("")
@@ -99,6 +98,22 @@ export function BirthdayBookPage({ birthday, onBack, onUpdate, onDelete }: Birth
     setEditRelationship(birthday.relationship || "friend")
     setEditInterests(birthday.interests || "")
     setEditNotes(birthday.notes || "")
+  }, [birthday])
+
+  // The portal mount points live in the detail spread, which mounts a moment
+  // later with the flip animation. Poll until they exist so the card isn't blank.
+  useEffect(() => {
+    let raf = 0
+    let cancelled = false
+    const find = () => {
+      if (cancelled) return
+      const p = document.getElementById("profile-portal-mount")
+      const d = document.getElementById("details-portal-mount")
+      if (p && d) setPortalNodes({ profile: p, details: d })
+      else raf = requestAnimationFrame(find)
+    }
+    find()
+    return () => { cancelled = true; cancelAnimationFrame(raf) }
   }, [birthday])
 
   const zodiac = getZodiac(birthday.date)
@@ -299,12 +314,9 @@ export function BirthdayBookPage({ birthday, onBack, onUpdate, onDelete }: Birth
     }
   }
 
-  if (!mounted) return null
-  
-  const profileNode = document.getElementById("profile-portal-mount")
-  const detailsNode = document.getElementById("details-portal-mount")
-
-  if (!profileNode || !detailsNode) return null
+  if (!portalNodes) return null
+  const profileNode = portalNodes.profile
+  const detailsNode = portalNodes.details
 
   const profileContent = (
     <div className="absolute inset-0 p-8 md:p-14 flex flex-col overflow-hidden">
