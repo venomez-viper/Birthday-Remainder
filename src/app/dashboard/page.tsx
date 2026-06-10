@@ -22,7 +22,8 @@ import {
   Gift,
   Users,
   Leaf,
-  LogOut
+  LogOut,
+  X
 } from "lucide-react"
 import Link from "next/link"
 import { getZodiac } from "@/lib/zodiac"
@@ -44,12 +45,12 @@ import {
 } from "@/components/birthdays/DiarySpreads"
 import React, { useRef } from "react"
 
-// Page-turn animation for switching diary sections (button-triggered flip).
+// Gentle page-turn animation for switching diary sections.
 const spreadMotion = {
-  initial: { rotateY: 88, opacity: 0.2 },
-  animate: { rotateY: 0, opacity: 1 },
-  exit: { rotateY: -88, opacity: 0.2 },
-  transition: { duration: 0.45, ease: "easeInOut" as const },
+  initial: { rotateY: -32, x: 16, opacity: 0.65, filter: "brightness(0.96)" },
+  animate: { rotateY: 0, x: 0, opacity: 1, filter: "brightness(1)" },
+  exit: { rotateY: 32, x: -16, opacity: 0.55, filter: "brightness(0.92)" },
+  transition: { duration: 0.62, ease: "easeInOut" as const },
 }
 
 interface Birthday {
@@ -91,6 +92,7 @@ export default function Home() {
   // Page Flip Animation state
   const bookRef = useRef<any>(null)
   const [currentSpread, setCurrentSpread] = useState(0) // 0: TOC, 1: Details, 2: Add
+  const [bookClosed, setBookClosed] = useState(false)
 
   // Unified diary sections
   const [section, setSection] = useState<"index" | "calendar" | "people" | "constellation" | "settings" | "detail" | "add">("index")
@@ -99,6 +101,7 @@ export default function Home() {
   const [savingProfile, setSavingProfile] = useState(false)
 
   const goToPage = (page: number, sec: typeof section) => {
+    setBookClosed(false)
     setSelectedBday(null)
     setIsAdding(false)
     setSection(sec)
@@ -147,12 +150,14 @@ export default function Home() {
         if (found) {
           setSelectedBday(found)
           setIsAdding(false)
+          setBookClosed(false)
           setSection("detail")
           if (bookRef.current) bookRef.current.pageFlip().turnToPage(10)
         }
       } else if (action === "add") {
         setIsAdding(true)
         setSelectedBday(null)
+        setBookClosed(false)
         setSection("add")
         if (bookRef.current) bookRef.current.pageFlip().turnToPage(12)
       }
@@ -259,6 +264,7 @@ export default function Home() {
   }, [todaysBirthdays])
 
   const handleSelectBday = (bday: Birthday) => {
+    setBookClosed(false)
     setSelectedBday(bday)
     setIsAdding(false)
     setSection("detail")
@@ -266,6 +272,7 @@ export default function Home() {
   }
 
   const handleBackToToc = () => {
+    setBookClosed(false)
     if (bookRef.current) bookRef.current.pageFlip().turnToPage(0)
     setTimeout(() => {
       setSelectedBday(null)
@@ -276,6 +283,7 @@ export default function Home() {
   }
 
   const handleOpenAdd = () => {
+    setBookClosed(false)
     setSelectedBday(null)
     setIsAdding(true)
     setSection("add")
@@ -293,6 +301,19 @@ export default function Home() {
       colors: ['#e89bb0', '#c16a72', '#d4a9a9', '#c9956b', '#f7d6df'],
     })
     handleBackToToc()
+  }
+
+  const handleCloseBook = () => {
+    setSelectedBday(null)
+    setIsAdding(false)
+    setSection("index")
+    setMobileTocTab("index")
+    setBookClosed(true)
+  }
+
+  const handleOpenBook = () => {
+    setBookClosed(false)
+    setSection("index")
   }
 
   if (status === "loading" || status === "unauthenticated" || loading) {
@@ -433,8 +454,17 @@ export default function Home() {
           <ChevronRight className="w-4 h-4 text-book-muted cursor-pointer hover:text-book-text transition-colors opacity-50" />
           <button
             type="button"
-            onClick={() => signOut({ callbackUrl: "/" })}
+            onClick={handleCloseBook}
             className="ml-2 inline-flex h-9 w-9 items-center justify-center rounded-full border border-book-border bg-book-paper text-book-text shadow-sm transition-colors hover:bg-book-cream focus:outline-none focus:ring-2 focus:ring-book-gold/50"
+            aria-label="Close book"
+            title="Close book"
+          >
+            <X className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => signOut({ callbackUrl: "/" })}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-book-border bg-book-paper text-book-text shadow-sm transition-colors hover:bg-book-cream focus:outline-none focus:ring-2 focus:ring-book-gold/50"
             aria-label="Log out"
             title="Log out"
           >
@@ -448,7 +478,10 @@ export default function Home() {
           ═══════════════════════════════════════════════════════ */}
       <div className="relative flex-1 min-h-0 w-full flex items-center justify-center">
         {/* Book frame — aspect-locked (8:5 spread) so it always fits the viewport */}
-        <div className="relative h-full max-h-full max-w-full aspect-[8/5]">
+        <div className={cn(
+          "relative h-full max-h-full max-w-full aspect-[8/5] transition-all duration-500",
+          bookClosed && "pointer-events-none scale-[0.72] opacity-0"
+        )}>
 
         {/* Book cover (dark green leather) */}
         <div className="book-cover flex justify-center items-center p-2 w-full h-full relative z-10">
@@ -456,7 +489,7 @@ export default function Home() {
           <div className="book-scene w-full h-full">
             <AnimatePresence mode="wait" initial={false}>
             {section === "index" && (
-            <motion.div key="index" className="diary-spread" initial={spreadMotion.initial} animate={spreadMotion.animate} exit={spreadMotion.exit} transition={spreadMotion.transition}>
+            <motion.div key="index" className="diary-spread page-turn-spread" initial={spreadMotion.initial} animate={spreadMotion.animate} exit={spreadMotion.exit} transition={spreadMotion.transition}>
             {/* ══════════════════════════════════════════════
                 SPREAD 1: VIEW 1 - TABLE OF CONTENTS
                 ══════════════════════════════════════════════ */}
@@ -646,7 +679,7 @@ export default function Home() {
             </motion.div>
             )}
             {section === "calendar" && (
-            <motion.div key="calendar" className="diary-spread" initial={spreadMotion.initial} animate={spreadMotion.animate} exit={spreadMotion.exit} transition={spreadMotion.transition}>
+            <motion.div key="calendar" className="diary-spread page-turn-spread" initial={spreadMotion.initial} animate={spreadMotion.animate} exit={spreadMotion.exit} transition={spreadMotion.transition}>
             <BookPage className="book-page-bg page-shadow-left p-8 md:p-12 flex flex-col">
               <CalendarLedger birthdays={birthdays} month={currentMonth} />
             </BookPage>
@@ -666,7 +699,7 @@ export default function Home() {
             </motion.div>
             )}
             {section === "people" && (
-            <motion.div key="people" className="diary-spread" initial={spreadMotion.initial} animate={spreadMotion.animate} exit={spreadMotion.exit} transition={spreadMotion.transition}>
+            <motion.div key="people" className="diary-spread page-turn-spread" initial={spreadMotion.initial} animate={spreadMotion.animate} exit={spreadMotion.exit} transition={spreadMotion.transition}>
             <BookPage className="book-page-bg page-shadow-left p-8 md:p-12 flex flex-col">
               <PeopleOverview birthdays={birthdays} />
             </BookPage>
@@ -680,7 +713,7 @@ export default function Home() {
             </motion.div>
             )}
             {section === "constellation" && (
-            <motion.div key="constellation" className="diary-spread" initial={spreadMotion.initial} animate={spreadMotion.animate} exit={spreadMotion.exit} transition={spreadMotion.transition}>
+            <motion.div key="constellation" className="diary-spread page-turn-spread" initial={spreadMotion.initial} animate={spreadMotion.animate} exit={spreadMotion.exit} transition={spreadMotion.transition}>
             <BookPage className="book-page-bg page-shadow-left p-8 md:p-12 flex flex-col">
               <ConstellationOverview birthdays={birthdays} />
             </BookPage>
@@ -694,7 +727,7 @@ export default function Home() {
             </motion.div>
             )}
             {section === "settings" && (
-            <motion.div key="settings" className="diary-spread" initial={spreadMotion.initial} animate={spreadMotion.animate} exit={spreadMotion.exit} transition={spreadMotion.transition}>
+            <motion.div key="settings" className="diary-spread page-turn-spread" initial={spreadMotion.initial} animate={spreadMotion.animate} exit={spreadMotion.exit} transition={spreadMotion.transition}>
             <BookPage className="book-page-bg page-shadow-left p-8 md:p-12 flex flex-col">
               {profile && <SettingsProfile profile={profile} onChange={(p) => setProfile({ ...profile, ...p })} />}
             </BookPage>
@@ -717,7 +750,7 @@ export default function Home() {
             </motion.div>
             )}
             {section === "detail" && (
-            <motion.div key="detail" className="diary-spread" initial={spreadMotion.initial} animate={spreadMotion.animate} exit={spreadMotion.exit} transition={spreadMotion.transition}>
+            <motion.div key="detail" className="diary-spread page-turn-spread" initial={spreadMotion.initial} animate={spreadMotion.animate} exit={spreadMotion.exit} transition={spreadMotion.transition}>
             <BookPage className="book-page-bg page-shadow-left">
               <div id="profile-portal-mount" className="w-full h-full relative" />
             </BookPage>
@@ -734,7 +767,7 @@ export default function Home() {
             </motion.div>
             )}
             {section === "add" && (
-            <motion.div key="add" className="diary-spread" initial={spreadMotion.initial} animate={spreadMotion.animate} exit={spreadMotion.exit} transition={spreadMotion.transition}>
+            <motion.div key="add" className="diary-spread page-turn-spread" initial={spreadMotion.initial} animate={spreadMotion.animate} exit={spreadMotion.exit} transition={spreadMotion.transition}>
             <BookPage className="book-page-bg page-shadow-left p-6 md:p-10 flex flex-col justify-between">
               <div className="floral-corner-tl" />
               <div className="floral-corner-bl" />
@@ -778,7 +811,25 @@ export default function Home() {
         {/* ═══════════════════════════════════════════════════════
             PHYSICAL TABS (right edge, desktop only)
             ═══════════════════════════════════════════════════════ */}
-        <div className="hidden md:flex fixed right-0 top-1/2 -translate-y-1/2 flex-col gap-1.5 z-40">
+        {bookClosed && (
+          <button
+            type="button"
+            onClick={handleOpenBook}
+            className="book-closed-cover group"
+            aria-label="Open birthday diary"
+          >
+            <span className="book-closed-spine" />
+            <span className="book-closed-rule book-closed-rule-top" />
+            <span className="book-closed-rule book-closed-rule-bottom" />
+            <span className="book-closed-title">Birthday Diary</span>
+            <span className="book-closed-subtitle">Open notebook</span>
+          </button>
+        )}
+
+        <div className={cn(
+          "hidden md:flex fixed right-0 top-1/2 -translate-y-1/2 flex-col gap-1.5 z-40",
+          bookClosed && "pointer-events-none opacity-50"
+        )}>
           <button onClick={() => goToPage(0, "index")} className={cn("book-tab book-tab-index", section === "index" && "active")}>
             <BookOpen className="w-4 h-4" />
             <span>Index</span>

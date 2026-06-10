@@ -480,7 +480,7 @@ export function BirthdayBookPage({ birthday, onBack, onUpdate, onDelete }: Birth
 
               {/* Oval portrait medallion with initials */}
               <div className="relative w-full flex items-center justify-center mb-3 py-1 shrink-0">
-                <div className="relative w-40 h-56 md:w-48 md:h-64">
+                <div className="relative w-48 h-64 md:w-56 md:h-72 lg:w-60 lg:h-80">
                   {/* Outer gold ring */}
                   <div className="absolute inset-0 rounded-[50%] border border-book-gold/40" />
                   {/* Inner framed portrait area */}
@@ -491,7 +491,7 @@ export function BirthdayBookPage({ birthday, onBack, onUpdate, onDelete }: Birth
                     ) : (
                       <>
                         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-book-card-warm opacity-50" />
-                        <span className="font-handwritten text-[5rem] md:text-[6.5rem] text-book-accent/80 leading-none relative z-10">
+                        <span className="font-handwritten text-[6rem] md:text-[7.5rem] text-book-accent/80 leading-none relative z-10">
                           {initials}
                         </span>
                       </>
