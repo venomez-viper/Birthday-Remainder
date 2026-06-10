@@ -452,7 +452,7 @@ export default function Home() {
             showCover={false}
             mobileScrollSupport={true}
             clickEventForward={true}
-            useMouseEvents={true}
+            useMouseEvents={false}
             disableFlipByClick={true}
             className="book-scene mx-auto w-full h-full"
             ref={bookRef}
