@@ -36,7 +36,7 @@ export default function PricingPage() {
       </nav>
 
       <AnimatedBackground className="pt-32 pb-20 flex-1">
-        <div className="max-w-5xl mx-auto px-6 relative z-10">
+        <div className="max-w-7xl mx-auto px-6 relative z-10 w-full">
           <motion.div initial="hidden" animate="visible" variants={fadeUp} className="text-center mb-20 flex flex-col items-center">
             <SparklesText 
               className="text-6xl md:text-8xl font-handwritten text-[#2d2418] mb-6"
@@ -49,7 +49,7 @@ export default function PricingPage() {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
             
             {/* Free Tier */}
             <motion.div initial="hidden" animate="visible" variants={fadeUp} transition={{ delay: 0.2 }} className="h-full">
@@ -157,7 +157,7 @@ export default function PricingPage() {
         </div>
 
         {/* Marquee Section */}
-        <div className="mt-32 max-w-6xl mx-auto w-full overflow-hidden relative z-10">
+        <div className="mt-32 max-w-7xl mx-auto w-full overflow-hidden relative z-10">
           <h2 className="text-center font-handwritten text-4xl text-[#2d2418] mb-12">Stories from our Keepers</h2>
           <div className="relative flex w-full flex-col items-center justify-center overflow-hidden">
             <Marquee pauseOnHover className="[--duration:40s]">

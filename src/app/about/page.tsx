@@ -33,7 +33,7 @@ export default function AboutPage() {
       </nav>
 
       <AnimatedBackground className="pt-32 pb-0 relative">
-        <div className="max-w-4xl mx-auto px-6 relative z-10">
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
           <motion.div initial="hidden" animate="visible" variants={fadeUp} className="text-center flex flex-col items-center">
             <SparklesText 
               className="text-6xl md:text-8xl font-handwritten text-[#2d2418] mb-6"
@@ -72,7 +72,7 @@ export default function AboutPage() {
           <div className="pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-[#faf6f0] dark:from-background"></div>
         </div>
 
-        <div className="max-w-3xl mx-auto px-6 py-32 text-center">
+        <div className="max-w-5xl mx-auto px-6 py-32 text-center">
           <h2 className="text-4xl font-handwritten text-[#2d2418] mb-8">Craftsmanship in Code</h2>
           <p className="font-serif text-[#6b5d4d] text-lg leading-relaxed mb-6">
             Birthday Diary isn't just an app. It's a digital heirloom. We spent months obsessing over typography, paper textures, and page-turning animations so that every time you open it, you feel a sense of calm.

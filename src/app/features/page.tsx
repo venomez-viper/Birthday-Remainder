@@ -63,7 +63,7 @@ export default function FeaturesPage() {
       </nav>
 
       <AnimatedBackground className="pt-32 pb-20">
-        <div className="max-w-5xl mx-auto px-6 relative z-10">
+        <div className="max-w-7xl mx-auto px-6 relative z-10 w-full">
           <motion.div initial="hidden" animate="visible" variants={fadeUp} className="text-center mb-20 flex flex-col items-center">
             <SparklesText 
               className="text-6xl md:text-8xl font-handwritten text-[#2d2418] mb-6"
