@@ -272,6 +272,20 @@
 /* ═══════════════════════════════════════════════════════
    BOOK PAPER TEXTURES
    ═══════════════════════════════════════════════════════ */
+/* Static two-page book (no flip library): two pages side by side, real DOM */
+.diary-spread {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+.diary-spread > .page-face {
+  position: relative;
+  inset: auto;
+  width: 50%;
+  height: 100%;
+}
+
 .book-page-bg {
   background-color: #fdf7ec;
   background-image:

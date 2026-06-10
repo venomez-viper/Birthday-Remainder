@@ -32,7 +32,7 @@ import BirthdayForm from "@/components/birthdays/BirthdayForm"
 import { BirthdayBookPage } from "@/components/birthdays/BirthdayBookPage"
 import { BirthdayMobileView } from "@/components/birthdays/BirthdayMobileView"
 import { BirthdayDetailDrawer } from "@/components/birthdays/BirthdayDetailDrawer"
-import { AnimatePresence } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 import dynamic from "next/dynamic"
 import { BookPage } from "@/components/ui/BookPage"
 import {
@@ -44,7 +44,13 @@ import {
 } from "@/components/birthdays/DiarySpreads"
 import React, { useRef } from "react"
 
-const HTMLFlipBook = dynamic(() => import('@/components/ui/FlipBook'), { ssr: false }) as any;
+// Page-turn animation for switching diary sections (button-triggered flip).
+const spreadMotion = {
+  initial: { rotateY: 75, opacity: 0 },
+  animate: { rotateY: 0, opacity: 1 },
+  exit: { rotateY: -75, opacity: 0 },
+  transition: { duration: 0.5, ease: "easeInOut" as const },
+}
 
 interface Birthday {
   id: string
@@ -448,26 +454,10 @@ export default function Home() {
         {/* Book cover (dark green leather) */}
         <div className="book-cover flex justify-center items-center p-2 w-full h-full relative z-10">
           {/* react-pageflip wrapper */}
-          <HTMLFlipBook
-            width={800}
-            height={1000}
-            size="stretch"
-            minWidth={300}
-            maxWidth={1600}
-            minHeight={380}
-            maxHeight={2000}
-            maxShadowOpacity={0}
-            drawShadow={false}
-            showCover={false}
-            mobileScrollSupport={true}
-            clickEventForward={true}
-            useMouseEvents={false}
-            disableFlipByClick={true}
-            className="book-scene mx-auto w-full h-full"
-            ref={bookRef}
-            flippingTime={800}
-            usePortrait={false}
-          >
+          <div className="book-scene w-full h-full">
+            <AnimatePresence mode="wait" initial={false}>
+            {section === "index" && (
+            <motion.div key="index" className="diary-spread" initial={spreadMotion.initial} animate={spreadMotion.animate} exit={spreadMotion.exit} transition={spreadMotion.transition}>
             {/* ══════════════════════════════════════════════
                 SPREAD 1: VIEW 1 - TABLE OF CONTENTS
                 ══════════════════════════════════════════════ */}
@@ -652,6 +642,10 @@ export default function Home() {
             {/* ══════════════════════════════════════════════
                 SPREAD: CALENDAR  (pages 2-3)
                 ══════════════════════════════════════════════ */}
+            </motion.div>
+            )}
+            {section === "calendar" && (
+            <motion.div key="calendar" className="diary-spread" initial={spreadMotion.initial} animate={spreadMotion.animate} exit={spreadMotion.exit} transition={spreadMotion.transition}>
             <BookPage className="book-page-bg page-shadow-left p-8 md:p-12 flex flex-col">
               <CalendarLedger birthdays={birthdays} month={currentMonth} />
             </BookPage>
@@ -668,6 +662,10 @@ export default function Home() {
             {/* ══════════════════════════════════════════════
                 SPREAD: PEOPLE  (pages 4-5)
                 ══════════════════════════════════════════════ */}
+            </motion.div>
+            )}
+            {section === "people" && (
+            <motion.div key="people" className="diary-spread" initial={spreadMotion.initial} animate={spreadMotion.animate} exit={spreadMotion.exit} transition={spreadMotion.transition}>
             <BookPage className="book-page-bg page-shadow-left p-8 md:p-12 flex flex-col">
               <PeopleOverview birthdays={birthdays} />
             </BookPage>
@@ -678,6 +676,10 @@ export default function Home() {
             {/* ══════════════════════════════════════════════
                 SPREAD: CONSTELLATION  (pages 6-7)
                 ══════════════════════════════════════════════ */}
+            </motion.div>
+            )}
+            {section === "constellation" && (
+            <motion.div key="constellation" className="diary-spread" initial={spreadMotion.initial} animate={spreadMotion.animate} exit={spreadMotion.exit} transition={spreadMotion.transition}>
             <BookPage className="book-page-bg page-shadow-left p-8 md:p-12 flex flex-col">
               <ConstellationOverview birthdays={birthdays} />
             </BookPage>
@@ -688,6 +690,10 @@ export default function Home() {
             {/* ══════════════════════════════════════════════
                 SPREAD: SETTINGS  (pages 8-9)
                 ══════════════════════════════════════════════ */}
+            </motion.div>
+            )}
+            {section === "settings" && (
+            <motion.div key="settings" className="diary-spread" initial={spreadMotion.initial} animate={spreadMotion.animate} exit={spreadMotion.exit} transition={spreadMotion.transition}>
             <BookPage className="book-page-bg page-shadow-left p-8 md:p-12 flex flex-col">
               {profile && <SettingsProfile profile={profile} onChange={(p) => setProfile({ ...profile, ...p })} />}
             </BookPage>
@@ -707,6 +713,10 @@ export default function Home() {
                 SPREAD: BIRTHDAY DETAIL  (pages 10-11)
                 ══════════════════════════════════════════════ */}
             {/* Page (Left) - Profile Portal Mount */}
+            </motion.div>
+            )}
+            {section === "detail" && (
+            <motion.div key="detail" className="diary-spread" initial={spreadMotion.initial} animate={spreadMotion.animate} exit={spreadMotion.exit} transition={spreadMotion.transition}>
             <BookPage className="book-page-bg page-shadow-left">
               <div id="profile-portal-mount" className="w-full h-full relative" />
             </BookPage>
@@ -720,6 +730,10 @@ export default function Home() {
                 SPREAD 3: VIEW 2 - ADD NEW ENTRY
                 ══════════════════════════════════════════════ */}
             {/* Page 5 (Left) - Add Context */}
+            </motion.div>
+            )}
+            {section === "add" && (
+            <motion.div key="add" className="diary-spread" initial={spreadMotion.initial} animate={spreadMotion.animate} exit={spreadMotion.exit} transition={spreadMotion.transition}>
             <BookPage className="book-page-bg page-shadow-left p-6 md:p-10 flex flex-col justify-between">
               <div className="floral-corner-tl" />
               <div className="floral-corner-bl" />
@@ -744,7 +758,10 @@ export default function Home() {
                 <BirthdayForm onSuccess={handleSuccess} />
               </div>
             </BookPage>
-          </HTMLFlipBook>
+            </motion.div>
+            )}
+            </AnimatePresence>
+          </div>
           
           {/* External BirthdayBookPage render (Portals its content into Spread 2) */}
           {selectedBday && (
