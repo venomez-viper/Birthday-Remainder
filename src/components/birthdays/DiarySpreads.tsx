@@ -144,23 +144,40 @@ export function PeopleOverview({ birthdays }: { birthdays: Bday[] }) {
     return acc
   }, {})
   const entries = Object.entries(groups).sort((a, b) => b[1] - a[1])
+  const total = birthdays.length
   return (
     <div className="h-full flex flex-col">
       <div className="floral-corner-tl" />
       <div className="floral-corner-bl" />
-      <PageHeading icon={Users} title="People" subtitle={`${birthdays.length} cherished ${birthdays.length === 1 ? "soul" : "souls"}`} />
-      <div className="flex-1 space-y-3 relative z-10 mt-2">
+      <PageHeading icon={Users} title="People" subtitle={`${total} cherished ${total === 1 ? "soul" : "souls"}`} />
+      {total > 0 && (
+        <div className="flex justify-center mb-5 relative z-10">
+          <div className="w-24 h-24 rounded-full bg-gradient-to-br from-book-accent/15 to-book-gold/15 border border-book-line shadow-[0_6px_16px_rgba(139,76,94,0.12)] flex flex-col items-center justify-center">
+            <span className="font-handwritten text-5xl text-book-accent leading-none">{total}</span>
+            <span className="text-[9px] uppercase tracking-[0.2em] text-book-muted mt-0.5">in all</span>
+          </div>
+        </div>
+      )}
+      <div className="flex-1 min-h-0 overflow-y-auto scrollbar-thin pr-1 space-y-2.5 relative z-10">
         {entries.length === 0 ? (
           <p className="text-sm text-book-muted font-serif italic py-10 text-center">No one in your diary yet.</p>
         ) : (
-          entries.map(([rel, count]) => (
-            <div key={rel} className="flex items-center justify-between bg-book-card border border-book-line rounded-xl p-4 shadow-sm">
-              <span className="font-serif text-book-text capitalize flex items-center gap-2">
-                <Heart className="w-4 h-4 text-book-accent/60" /> {rel}
-              </span>
-              <span className="font-handwritten text-3xl text-book-accent">{count}</span>
-            </div>
-          ))
+          entries.map(([rel, count]) => {
+            const pct = total ? Math.round((count / total) * 100) : 0
+            return (
+              <div key={rel} className="bg-book-card border border-book-line rounded-xl p-3.5 shadow-sm">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="font-serif text-book-text capitalize flex items-center gap-2 text-sm">
+                    <Heart className="w-3.5 h-3.5 text-book-accent/60" /> {rel}
+                  </span>
+                  <span className="font-handwritten text-2xl text-book-accent leading-none">{count}</span>
+                </div>
+                <div className="h-1.5 rounded-full bg-book-border/40 overflow-hidden">
+                  <div className="h-full bg-book-accent/55 rounded-full" style={{ width: `${pct}%` }} />
+                </div>
+              </div>
+            )
+          })
         )}
       </div>
     </div>
@@ -173,21 +190,30 @@ export function PeopleList({ birthdays, onSelect }: { birthdays: Bday[]; onSelec
     <div className="h-full flex flex-col">
       <div className="floral-corner-tr" />
       <div className="floral-corner-br" />
-      <h3 className="font-handwritten text-3xl text-book-text leading-none border-b border-book-border pb-3 mb-4 relative z-10">Directory</h3>
-      <div className="flex-1 overflow-y-auto pr-2 grid grid-cols-1 gap-2 scrollbar-thin relative z-10">
+      <div className="flex items-end justify-between border-b border-book-border pb-3 mb-4 relative z-10">
+        <h3 className="font-handwritten text-3xl text-book-text leading-none">Directory</h3>
+        {sorted.length > 0 && (
+          <span className="text-[10px] font-serif uppercase tracking-wider text-book-accent bg-book-accent/10 px-2.5 py-1 rounded-full">{sorted.length}</span>
+        )}
+      </div>
+      <div className="flex-1 min-h-0 overflow-y-auto pr-1.5 space-y-1 scrollbar-thin relative z-10">
         {sorted.length === 0 ? (
           <p className="text-sm text-book-muted font-serif italic py-10 text-center">Add someone to begin your directory.</p>
         ) : (
-          sorted.map(b => (
-            <button key={b.id} onClick={() => onSelect(b)} className="flex items-center gap-3 p-2 rounded-lg hover:bg-book-cream/60 text-left transition-colors">
-              <Avatar b={b} size={40} />
-              <div className="min-w-0 flex-1">
-                <span className="block font-serif font-bold text-book-text truncate">{b.name}</span>
-                <span className="block text-[11px] text-book-muted">{format(new Date(b.date), "MMMM d")} · {getZodiac(b.date).name}</span>
-              </div>
-              <ChevronRight className="w-4 h-4 text-book-muted/60" />
-            </button>
-          ))
+          sorted.map(b => {
+            const z = getZodiac(b.date)
+            return (
+              <button key={b.id} onClick={() => onSelect(b)} className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-book-cream/70 text-left transition-colors group">
+                <Avatar b={b} size={44} />
+                <div className="min-w-0 flex-1">
+                  <span className="block font-serif font-bold text-book-text truncate group-hover:text-book-accent transition-colors">{b.name}</span>
+                  <span className="block text-[11px] text-book-muted capitalize">{b.relationship || "friend"} · {z.name}</span>
+                </div>
+                <span className="font-serif text-sm text-book-muted shrink-0 whitespace-nowrap">{format(new Date(b.date), "MMM d")}</span>
+                <ChevronRight className="w-4 h-4 text-book-muted/50 group-hover:text-book-accent transition-colors shrink-0" />
+              </button>
+            )
+          })
         )}
       </div>
     </div>
