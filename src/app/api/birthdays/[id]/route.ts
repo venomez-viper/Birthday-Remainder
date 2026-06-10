@@ -75,7 +75,7 @@ export async function PUT(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const { name, date, notes, relationship, interests } = await req.json()
+    const { name, date, notes, relationship, interests, imageUrl } = await req.json()
 
     const updatedBirthday = await prisma.birthday.update({
       where: { id: params.id },

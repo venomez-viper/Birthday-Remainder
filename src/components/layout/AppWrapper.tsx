@@ -19,14 +19,16 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className={cn("min-h-screen relative overflow-hidden wood-desk")}>
-      {/* Soft vignette glow at the desk corners (drawn, blends with the wood) */}
-      {session && (
-        <>
-          <div className="fixed -top-32 -left-32 w-[420px] h-[420px] rounded-full bg-[radial-gradient(circle,rgba(201,149,107,0.10),transparent_70%)] pointer-events-none z-0" />
-          <div className="fixed -bottom-32 -right-32 w-[420px] h-[420px] rounded-full bg-[radial-gradient(circle,rgba(212,169,169,0.10),transparent_70%)] pointer-events-none z-0" />
-        </>
-      )}
+    <div className={cn("min-h-screen relative overflow-hidden soft-floral-bg")}>
+      {/* Real flower photography softly faded into the corners (blends, never pasted) */}
+      <div
+        className="flower-accent -top-24 -left-24 w-[380px] h-[380px]"
+        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1490750967868-88aa4f44baee?w=600&q=80&auto=format')" }}
+      />
+      <div
+        className="flower-accent -bottom-28 -right-24 w-[420px] h-[420px]"
+        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=600&q=80&auto=format')" }}
+      />
 
       {/* Interactive Floating Petals Canvas */}
       {session && <FloatingPetals />}

@@ -5,6 +5,7 @@ import { CalendarHeart, Loader2, Sparkles, Wand2, Keyboard } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { ImageUpload } from "@/components/ui/ImageUpload"
 
 interface BirthdayFormProps {
   onSuccess: () => void
@@ -30,6 +31,7 @@ export default function BirthdayForm({ onSuccess }: BirthdayFormProps) {
   const [notes, setNotes] = useState("")
   const [relationship, setRelationship] = useState("friend")
   const [interests, setInterests] = useState("")
+  const [imageUrl, setImageUrl] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
 
@@ -73,7 +75,7 @@ export default function BirthdayForm({ onSuccess }: BirthdayFormProps) {
       const res = await fetch("/api/birthdays", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, date, notes, relationship, interests }),
+        body: JSON.stringify({ name, date, notes, relationship, interests, imageUrl }),
       })
 
       if (res.ok) {
@@ -82,6 +84,7 @@ export default function BirthdayForm({ onSuccess }: BirthdayFormProps) {
         setNotes("")
         setRelationship("friend")
         setInterests("")
+        setImageUrl(null)
         setAiText("")
         onSuccess()
       } else {
@@ -169,6 +172,16 @@ export default function BirthdayForm({ onSuccess }: BirthdayFormProps) {
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="flex justify-center pb-2">
+            <ImageUpload
+              value={imageUrl}
+              onChange={setImageUrl}
+              size={88}
+              shape="circle"
+              fallback={name ? name.charAt(0).toUpperCase() : undefined}
+            />
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
               <Label htmlFor="name" className="text-[10px] uppercase font-bold text-book-muted tracking-wider">

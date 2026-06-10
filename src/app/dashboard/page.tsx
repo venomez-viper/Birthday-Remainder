@@ -242,11 +242,11 @@ export default function Home() {
 
   if (status === "loading" || status === "unauthenticated" || loading) {
     return (
-      <div className="wood-desk min-h-screen flex flex-col justify-center items-center gap-4">
+      <div className="soft-floral-bg min-h-screen flex flex-col justify-center items-center gap-4">
         <div className="relative">
           <Clock className="w-10 h-10 animate-spin text-book-gold" />
         </div>
-        <p className="font-handwritten text-2xl text-book-cream italic">Opening your birthday diary...</p>
+        <p className="font-handwritten text-2xl text-book-text italic">Opening your birthday diary...</p>
         <div className="flex gap-1 mt-2">
           {[0, 1, 2].map(i => (
             <div
@@ -296,7 +296,7 @@ export default function Home() {
 
   return (
     <div className={cn(
-      "wood-desk w-full h-full relative",
+      "soft-floral-bg w-full h-full relative",
       isMobile
         ? "overflow-y-auto"
         : "flex flex-col items-center px-3 md:px-6 pt-3 md:pt-5 pb-3 overflow-hidden"
@@ -343,7 +343,7 @@ export default function Home() {
       <div className="shrink-0 flex flex-col md:flex-row justify-between items-center w-full max-w-5xl mb-3 md:mb-4 gap-2 md:gap-0">
         {/* LEFT: Logo */}
         <div className="text-center md:text-left">
-          <h1 className="font-handwritten text-3xl md:text-4xl text-book-cream leading-none">
+          <h1 className="font-handwritten text-3xl md:text-4xl text-book-text leading-none">
             Birthday Diary
           </h1>
           <p className="font-serif italic text-book-muted text-xs md:text-sm mt-0.5">
@@ -364,17 +364,17 @@ export default function Home() {
         </div>
 
         {/* RIGHT: Today's date */}
-        <div className="flex items-center gap-2 text-book-cream">
-          <ChevronLeft className="w-4 h-4 text-book-muted cursor-pointer hover:text-book-cream transition-colors opacity-50" />
+        <div className="flex items-center gap-2 text-book-text">
+          <ChevronLeft className="w-4 h-4 text-book-muted cursor-pointer hover:text-book-text transition-colors opacity-50" />
           <div className="text-center">
-            <span className="font-serif text-sm md:text-base text-book-cream font-medium">
+            <span className="font-serif text-sm md:text-base text-book-text font-medium">
               {format(today, "MMM dd, yyyy")}
             </span>
             <span className="block font-serif text-xs text-book-muted italic">
               {format(today, "EEEE")}
             </span>
           </div>
-          <ChevronRight className="w-4 h-4 text-book-muted cursor-pointer hover:text-book-cream transition-colors opacity-50" />
+          <ChevronRight className="w-4 h-4 text-book-muted cursor-pointer hover:text-book-text transition-colors opacity-50" />
         </div>
       </div>
 

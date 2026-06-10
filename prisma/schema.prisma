@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -16,7 +13,7 @@ model User {
   email           String     @unique
   password        String
   themePreference String     @default("cherry-blossom")
-  reminderDays    Int        @default(1) // days before to remind
+  reminderDays    Int        @default(1)
   timezone        String     @default("UTC")
   avatarUrl       String?
   ownBirthday     DateTime?
@@ -30,36 +27,37 @@ model Birthday {
   name           String
   date           DateTime
   notes          String?
-  relationship   String?          // e.g., "friend", "family", "colleague"
-  interests      String?          // comma-separated for AI gift generation
-  zodiacSign     String?          // auto-calculated on save
+  relationship   String?
+  interests      String?
+  zodiacSign     String?
   userId         String
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  imageUrl       String?
   user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   giftIdeas      GiftIdea[]
   messageHistory MessageHistory[]
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
 }
 
 model GiftIdea {
   id         String   @id @default(cuid())
   birthdayId String
-  birthday   Birthday @relation(fields: [birthdayId], references: [id], onDelete: Cascade)
   title      String
   url        String?
   price      Float?
-  status     String   @default("idea") // "idea", "purchased"
+  status     String   @default("idea")
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  birthday   Birthday @relation(fields: [birthdayId], references: [id], onDelete: Cascade)
 }
 
 model MessageHistory {
   id         String   @id @default(cuid())
   birthdayId String
-  birthday   Birthday @relation(fields: [birthdayId], references: [id], onDelete: Cascade)
   year       Int
   message    String
   giftGiven  String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  birthday   Birthday @relation(fields: [birthdayId], references: [id], onDelete: Cascade)
 }
