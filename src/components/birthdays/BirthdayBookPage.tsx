@@ -356,14 +356,27 @@ export function BirthdayBookPage({ birthday, onBack, onUpdate, onDelete }: Birth
         <div className="floral-corner-bl" />
 
         <div className="relative z-10 flex flex-col flex-1">
-          {/* Back link */}
-          <button
-            onClick={onBack}
-            className="flex items-center gap-2 text-base text-book-muted hover:text-book-text transition-colors font-serif italic group mb-6 self-start"
-          >
-            <ChevronLeft className="w-5 h-5 transition-transform duration-300 group-hover:-translate-x-1" />
-            Back to Index
-          </button>
+          <div className="flex items-center justify-between gap-3 mb-5">
+            {/* Back link */}
+            <button
+              onClick={onBack}
+              className="flex items-center gap-2 text-base text-book-muted hover:text-book-text transition-colors font-serif italic group"
+            >
+              <ChevronLeft className="w-5 h-5 transition-transform duration-300 group-hover:-translate-x-1" />
+              Back to Index
+            </button>
+
+            {!isEditing && (
+              <Button
+                onClick={() => setIsEditing(true)}
+                size="sm"
+                className="bg-book-text hover:bg-book-text/90 text-book-cream rounded-full px-4 font-serif shadow-sm"
+              >
+                <PenTool className="w-4 h-4 mr-1.5" />
+                Edit
+              </Button>
+            )}
+          </div>
 
           {/* Section label */}
           <span className="text-xs md:text-sm uppercase tracking-[0.3em] font-serif text-book-muted mb-8 block">
@@ -476,11 +489,11 @@ export function BirthdayBookPage({ birthday, onBack, onUpdate, onDelete }: Birth
             </form>
           ) : (
             /* ── PROFILE DISPLAY (Identity) ── */
-            <div className="flex flex-col items-center flex-1 pt-1 overflow-y-auto scrollbar-thin">
+            <div className="flex flex-col items-center flex-1 pt-0 pb-8 overflow-y-auto scrollbar-thin">
 
               {/* Oval portrait medallion with initials */}
-              <div className="relative w-full flex items-center justify-center mb-2 py-1 shrink-0">
-                <div className="relative w-[clamp(12rem,23vh,15rem)] h-[clamp(16rem,31vh,20rem)]">
+              <div className="relative w-full flex items-center justify-center mb-2 shrink-0">
+                <div className="relative w-[clamp(11.25rem,21vh,14.25rem)] h-[clamp(15rem,28vh,19rem)]">
                   {/* Outer gold ring */}
                   <div className="absolute inset-0 rounded-[50%] border border-book-gold/40" />
                   {/* Inner framed portrait area */}
@@ -509,7 +522,7 @@ export function BirthdayBookPage({ birthday, onBack, onUpdate, onDelete }: Birth
                 </div>
               </div>
 
-              <h2 className="font-serif text-3xl md:text-4xl font-semibold text-book-text text-center leading-tight mb-1 shrink-0 max-w-sm break-words">
+              <h2 className="font-serif text-3xl md:text-[2.1rem] font-semibold text-book-text text-center leading-tight mb-1 shrink-0 max-w-sm break-words">
                 {birthday.name}
               </h2>
 
@@ -521,17 +534,17 @@ export function BirthdayBookPage({ birthday, onBack, onUpdate, onDelete }: Birth
               </div>
 
               {/* Fact grid: Turning N + Countdown */}
-              <div className="grid grid-cols-2 gap-3 w-full max-w-sm mb-4 shrink-0">
-                <div className="flex flex-col items-center text-center border border-book-border/70 rounded-md bg-book-card/45 py-2.5 px-2">
-                  <Cake className="w-5 h-5 text-book-accent/70 mb-1.5" />
-                  <span className="font-serif text-2xl font-semibold text-book-text leading-none">{age + (daysUntil === 0 ? 0 : 1) }</span>
+              <div className="grid grid-cols-2 gap-3 w-full max-w-sm mb-3.5 shrink-0">
+                <div className="flex flex-col items-center text-center border border-book-border/70 rounded-md bg-book-card/45 py-2 px-2">
+                  <Cake className="w-4 h-4 text-book-accent/70 mb-1" />
+                  <span className="font-serif text-[1.35rem] font-semibold text-book-text leading-none">{age + (daysUntil === 0 ? 0 : 1) }</span>
                   <span className="text-[10px] uppercase tracking-[0.2em] font-serif text-book-muted mt-1">
                     {daysUntil === 0 ? `Turned ${age}` : "Turning"}
                   </span>
                 </div>
-                <div className="flex flex-col items-center text-center border border-book-border/70 rounded-md bg-book-card/45 py-2.5 px-2">
-                  <CalendarClock className="w-5 h-5 text-book-accent/70 mb-1.5" />
-                  <span className="font-serif text-2xl font-semibold text-book-text leading-none">
+                <div className="flex flex-col items-center text-center border border-book-border/70 rounded-md bg-book-card/45 py-2 px-2">
+                  <CalendarClock className="w-4 h-4 text-book-accent/70 mb-1" />
+                  <span className="font-serif text-[1.35rem] font-semibold text-book-text leading-none">
                     {daysUntil === 0 ? "Today" : daysUntil}
                   </span>
                   <span className="text-[10px] uppercase tracking-[0.2em] font-serif text-book-muted mt-1">
@@ -542,13 +555,13 @@ export function BirthdayBookPage({ birthday, onBack, onUpdate, onDelete }: Birth
 
               {/* Zodiac strip */}
               <div className="w-full max-w-sm mb-6 shrink-0">
-                <div className="flex items-center gap-3 mb-3">
+                <div className="flex items-center gap-3 mb-2">
                   <span className="text-[11px] uppercase font-serif tracking-[0.2em] text-book-muted">Under the Stars</span>
                   <div className="h-px bg-book-border/40 flex-1" />
                 </div>
                 <div className="flex items-stretch gap-3">
-                  <div className="flex items-center gap-3 flex-1 border border-book-border/60 rounded-lg bg-book-card/40 px-4 py-3">
-                    <span className="text-3xl leading-none">{zodiac.emoji}</span>
+                  <div className="flex items-center gap-3 flex-1 border border-book-border/60 rounded-lg bg-book-card/40 px-4 py-2.5">
+                    <span className="text-2xl leading-none">{zodiac.emoji}</span>
                     <div className="flex flex-col">
                       <span className="font-serif text-lg text-book-text leading-tight">{zodiac.name}</span>
                       <span className="flex items-center gap-1 text-[11px] font-serif text-book-muted">
@@ -556,7 +569,7 @@ export function BirthdayBookPage({ birthday, onBack, onUpdate, onDelete }: Birth
                       </span>
                     </div>
                   </div>
-                  <div className="flex flex-col items-center justify-center border border-book-border/60 rounded-lg bg-book-card/40 px-4 py-3 text-center">
+                  <div className="flex flex-col items-center justify-center border border-book-border/60 rounded-lg bg-book-card/40 px-4 py-2.5 text-center">
                     <Gem className="w-4 h-4 text-book-accent/70 mb-1" />
                     <span className="font-serif text-sm text-book-text leading-tight">{zodiac.stone}</span>
                     <span className="text-[9px] uppercase tracking-[0.15em] font-serif text-book-muted">Birthstone</span>
