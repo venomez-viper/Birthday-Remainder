@@ -456,7 +456,8 @@ export default function Home() {
             maxWidth={1600}
             minHeight={380}
             maxHeight={2000}
-            maxShadowOpacity={0.5}
+            maxShadowOpacity={0}
+            drawShadow={false}
             showCover={false}
             mobileScrollSupport={true}
             clickEventForward={true}
