@@ -40,10 +40,9 @@ export function HeroSection({
           >
             {title1}
           </SparklesText>
-          <SparklesText 
+          <SparklesText
             className="text-7xl md:text-9xl lg:text-[10rem] font-handwritten leading-[0.9] tracking-tight"
             colors={{ first: title2Color, second: "#d4c5a9" }}
-            style={{ color: title2Color }}
           >
             {title2}
           </SparklesText>
