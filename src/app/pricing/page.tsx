@@ -5,7 +5,7 @@ import { Footer } from "@/components/layout/Footer"
 import { AnimatedBackground } from "@/components/ui/AnimatedBackground"
 import { SparklesText } from "@/components/ui/sparkles-text"
 import { MagicCard } from "@/components/ui/magic-card"
-import ShimmerButton from "@/components/ui/shimmer-button"
+import { ShimmerButton } from "@/components/ui/shimmer-button"
 import Link from "next/link"
 import { ArrowLeft, Check, Sparkles } from "lucide-react"
 

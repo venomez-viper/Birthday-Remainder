@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 import Link from "next/link"
 import { ArrowRight, Sparkles, Star } from "lucide-react"
 import { SparklesText } from "./sparkles-text"
-import ShimmerButton from "./shimmer-button"
+import { ShimmerButton } from "./shimmer-button"
 
 interface HeroSectionProps {
   title1: string
