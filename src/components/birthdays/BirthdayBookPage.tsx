@@ -476,15 +476,15 @@ export function BirthdayBookPage({ birthday, onBack, onUpdate, onDelete }: Birth
             </form>
           ) : (
             /* ── PROFILE DISPLAY (Identity) ── */
-            <div className="flex flex-col items-center flex-1 pt-2 overflow-y-auto scrollbar-thin">
+            <div className="flex flex-col items-center flex-1 pt-1 overflow-y-auto scrollbar-thin">
 
               {/* Oval portrait medallion with initials */}
-              <div className="relative w-full flex items-center justify-center mb-6 py-2 shrink-0">
-                <div className="relative w-44 h-60 md:w-52 md:h-72">
+              <div className="relative w-full flex items-center justify-center mb-3 py-1 shrink-0">
+                <div className="relative w-40 h-56 md:w-48 md:h-64">
                   {/* Outer gold ring */}
                   <div className="absolute inset-0 rounded-[50%] border border-book-gold/40" />
                   {/* Inner framed portrait area */}
-                  <div className="absolute inset-2 rounded-[50%] border-2 border-book-line bg-book-card shadow-inner flex items-center justify-center overflow-hidden">
+                  <div className="absolute inset-2 rounded-[50%] border-2 border-book-line bg-book-card shadow-inner flex items-center justify-center overflow-hidden ring-4 ring-book-cream/70">
                     {birthday.imageUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={birthday.imageUrl} alt={birthday.name} className="w-full h-full object-cover" />
@@ -500,40 +500,38 @@ export function BirthdayBookPage({ birthday, onBack, onUpdate, onDelete }: Birth
                 </div>
               </div>
 
-              {/* Name — the ONLY prominent name across the spread */}
-              <h2 className="font-handwritten text-5xl md:text-6xl text-book-text text-center leading-tight mb-2 shrink-0">
+              {/* Birth date plaque */}
+              <div className="relative z-20 mb-3 shrink-0">
+                <div className="vintage-card px-8 py-3 shadow-lg border border-book-line text-center bg-book-cream/90">
+                  <span className="block text-lg md:text-xl font-serif font-semibold text-book-text">
+                    {monthName} {dayNumber}, {yearNumber}
+                  </span>
+                </div>
+              </div>
+
+              <h2 className="font-serif text-3xl md:text-4xl font-semibold text-book-text text-center leading-tight mb-1 shrink-0 max-w-sm break-words">
                 {birthday.name}
               </h2>
 
-              {/* Relationship badge */}
-              <div className="flex items-center justify-center gap-2 mb-5 shrink-0">
+              <div className="flex items-center justify-center gap-2 mb-4 shrink-0">
                 <Users className="w-3.5 h-3.5 text-book-muted" />
                 <span className="text-[11px] uppercase font-serif tracking-[0.25em] text-book-muted">
                   {relationshipLabel}
                 </span>
               </div>
 
-              {/* Birth date plaque */}
-              <div className="relative z-20 mb-6 shrink-0">
-                <div className="vintage-card px-8 py-3 shadow-lg border border-book-line text-center">
-                  <span className="block text-lg md:text-xl font-serif text-book-text">
-                    {monthName} {dayNumber}, {yearNumber}
-                  </span>
-                </div>
-              </div>
-
               {/* Fact grid: Turning N + Countdown */}
-              <div className="grid grid-cols-2 gap-4 w-full max-w-sm mb-6 shrink-0">
-                <div className="flex flex-col items-center text-center border border-book-border/60 rounded-lg bg-book-card/40 py-4 px-2">
+              <div className="grid grid-cols-2 gap-3 w-full max-w-sm mb-5 shrink-0">
+                <div className="flex flex-col items-center text-center border border-book-border/70 rounded-md bg-book-card/45 py-3 px-2">
                   <Cake className="w-5 h-5 text-book-accent/70 mb-1.5" />
-                  <span className="font-handwritten text-3xl text-book-text leading-none">{age + (daysUntil === 0 ? 0 : 1) }</span>
+                  <span className="font-serif text-2xl font-semibold text-book-text leading-none">{age + (daysUntil === 0 ? 0 : 1) }</span>
                   <span className="text-[10px] uppercase tracking-[0.2em] font-serif text-book-muted mt-1">
                     {daysUntil === 0 ? `Turned ${age}` : "Turning"}
                   </span>
                 </div>
-                <div className="flex flex-col items-center text-center border border-book-border/60 rounded-lg bg-book-card/40 py-4 px-2">
+                <div className="flex flex-col items-center text-center border border-book-border/70 rounded-md bg-book-card/45 py-3 px-2">
                   <CalendarClock className="w-5 h-5 text-book-accent/70 mb-1.5" />
-                  <span className="font-handwritten text-3xl text-book-text leading-none">
+                  <span className="font-serif text-2xl font-semibold text-book-text leading-none">
                     {daysUntil === 0 ? "Today" : daysUntil}
                   </span>
                   <span className="text-[10px] uppercase tracking-[0.2em] font-serif text-book-muted mt-1">

@@ -462,7 +462,7 @@ export default function Home() {
                 SPREAD 1: VIEW 1 - TABLE OF CONTENTS
                 ══════════════════════════════════════════════ */}
             {/* Page 1 (Left) - INDEX */}
-            <BookPage className="book-page-bg page-shadow-left p-8 md:p-14 flex flex-col pb-10">
+            <BookPage className="book-page-bg page-shadow-left p-8 md:p-14 flex flex-col pb-10 min-h-0">
               <div className="floral-corner-tl" />
               <div className="floral-corner-bl" />
               
@@ -473,7 +473,7 @@ export default function Home() {
                 <div className="floral-divider mt-4 scale-90 opacity-80" />
               </div>
 
-              <div className="flex-1 overflow-y-auto pr-4 space-y-2 md:space-y-3 scrollbar-thin relative z-10 mt-6">
+              <div className="index-list flex-1 min-h-0 overflow-y-auto overscroll-contain pr-3 md:pr-4 space-y-2 md:space-y-3 scrollbar-thin relative z-10 mt-4">
                 {totalCount === 0 ? (
                   <div className="text-center py-16">
                     <p className="text-lg md:text-xl text-book-muted font-serif italic mb-6">Your diary is empty.</p>
@@ -494,7 +494,7 @@ export default function Home() {
                         key={b.id}
                         onClick={() => handleSelectBday(b)}
                         className={cn(
-                          "w-full text-left flex items-center text-lg md:text-xl font-serif cursor-pointer group transition-all duration-200 py-2 px-3 rounded-md",
+                          "w-full min-w-0 text-left flex items-center text-base md:text-lg font-serif cursor-pointer group transition-all duration-200 py-2 px-3 rounded-md",
                           isToday ? "bg-book-sage/70 shadow-sm" : "hover:bg-book-cream/50"
                         )}
                       >
@@ -503,9 +503,9 @@ export default function Home() {
                         ) : (
                           <span className="w-1.5 h-1.5 rounded-full bg-book-muted/50 mr-3 shrink-0 group-hover:bg-book-accent transition-colors" />
                         )}
-                        <span className="font-medium text-book-text group-hover:text-book-accent transition-colors truncate">{b.name}</span>
+                        <span className="min-w-0 flex-1 font-medium text-book-text group-hover:text-book-accent transition-colors truncate">{b.name}</span>
                         <span className="dotted-leader opacity-50" />
-                        <span className="text-book-muted text-base md:text-lg whitespace-nowrap">{format(new Date(b.date), "MMM dd")}</span>
+                        <span className="text-book-muted text-sm md:text-base whitespace-nowrap">{format(new Date(b.date), "MMM dd")}</span>
                       </button>
                     )
                   })

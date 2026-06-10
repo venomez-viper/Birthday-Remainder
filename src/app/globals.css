@@ -304,6 +304,25 @@
   background-blend-mode: multiply;
 }
 
+.page-face::after {
+  content: '';
+  position: absolute;
+  inset: 12px;
+  border: 1.5px solid rgba(139, 76, 94, 0.22);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 248, 237, 0.78),
+    0 0 0 1px rgba(201, 149, 107, 0.12);
+  pointer-events: none;
+  z-index: 8;
+}
+
+.index-list {
+  border-top: 1px solid rgba(212, 197, 169, 0.55);
+  border-bottom: 1px solid rgba(212, 197, 169, 0.55);
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
 /* ═══════════════════════════════════════════════════════
    BOOK CONTAINER & COVER
    ═══════════════════════════════════════════════════════ */
