@@ -1,11 +1,11 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { useSession } from "next-auth/react"
+import { useSession, signOut } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
-import { format, differenceInDays, addYears, isBefore, startOfDay, differenceInYears, isThisMonth, isThisWeek } from "date-fns"
+import { format, differenceInDays, addYears, isBefore, startOfDay, differenceInYears, isThisMonth, isThisWeek, addMonths, subMonths } from "date-fns"
 import confetti from "canvas-confetti"
 import {
   Plus,
@@ -34,6 +34,13 @@ import { BirthdayDetailDrawer } from "@/components/birthdays/BirthdayDetailDrawe
 import { AnimatePresence } from "framer-motion"
 import dynamic from "next/dynamic"
 import { BookPage } from "@/components/ui/BookPage"
+import {
+  CalendarLedger, CalendarGrid,
+  PeopleOverview, PeopleList,
+  ConstellationOverview, ConstellationList,
+  SettingsProfile, SettingsPrefs,
+  type Profile,
+} from "@/components/birthdays/DiarySpreads"
 import React, { useRef } from "react"
 
 const HTMLFlipBook = dynamic(() => import('react-pageflip'), { ssr: false }) as any;
@@ -45,6 +52,7 @@ interface Birthday {
   notes: string | null
   relationship: string | null
   interests: string | null
+  imageUrl?: string | null
 }
 
 export default function Home() {
@@ -77,6 +85,38 @@ export default function Home() {
   const bookRef = useRef<any>(null)
   const [currentSpread, setCurrentSpread] = useState(0) // 0: TOC, 1: Details, 2: Add
 
+  // Unified diary sections
+  const [section, setSection] = useState<"index" | "calendar" | "people" | "constellation" | "settings" | "detail" | "add">("index")
+  const [currentMonth, setCurrentMonth] = useState(new Date())
+  const [profile, setProfile] = useState<Profile | null>(null)
+  const [savingProfile, setSavingProfile] = useState(false)
+
+  const goToPage = (page: number, sec: typeof section) => {
+    setSelectedBday(null)
+    setIsAdding(false)
+    setSection(sec)
+    if (bookRef.current) bookRef.current.pageFlip().turnToPage(page)
+  }
+
+  const fetchProfile = async () => {
+    try {
+      const res = await fetch("/api/user/profile")
+      if (res.ok) setProfile(await res.json())
+    } catch (e) { console.error(e) }
+  }
+
+  const saveProfile = async () => {
+    if (!profile) return
+    setSavingProfile(true)
+    try {
+      await fetch("/api/user/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(profile),
+      })
+    } catch (e) { console.error(e) } finally { setSavingProfile(false) }
+  }
+
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/login")
@@ -86,6 +126,7 @@ export default function Home() {
   useEffect(() => {
     if (session) {
       fetchBirthdays()
+      fetchProfile()
     }
   }, [session, refreshTrigger])
 
@@ -99,14 +140,14 @@ export default function Home() {
         if (found) {
           setSelectedBday(found)
           setIsAdding(false)
-          setCurrentSpread(1)
-          if (bookRef.current) bookRef.current.pageFlip().turnToPage(2)
+          setSection("detail")
+          if (bookRef.current) bookRef.current.pageFlip().turnToPage(10)
         }
       } else if (action === "add") {
         setIsAdding(true)
         setSelectedBday(null)
-        setCurrentSpread(2)
-        if (bookRef.current) bookRef.current.pageFlip().turnToPage(4)
+        setSection("add")
+        if (bookRef.current) bookRef.current.pageFlip().turnToPage(12)
       }
     }
   }, [birthdays, refreshTrigger])
@@ -214,8 +255,8 @@ export default function Home() {
   const handleSelectBday = (bday: Birthday) => {
     setSelectedBday(bday)
     setIsAdding(false)
-    setCurrentSpread(1)
-    if (bookRef.current) bookRef.current.pageFlip().turnToPage(2)
+    setSection("detail")
+    if (bookRef.current) bookRef.current.pageFlip().turnToPage(10)
   }
 
   const handleBackToToc = () => {
@@ -223,7 +264,7 @@ export default function Home() {
     setTimeout(() => {
       setSelectedBday(null)
       setIsAdding(false)
-      setCurrentSpread(0)
+      setSection("index")
       setMobileTocTab("index")
     }, 600)
   }
@@ -231,8 +272,8 @@ export default function Home() {
   const handleOpenAdd = () => {
     setSelectedBday(null)
     setIsAdding(true)
-    setCurrentSpread(2)
-    if (bookRef.current) bookRef.current.pageFlip().turnToPage(4)
+    setSection("add")
+    if (bookRef.current) bookRef.current.pageFlip().turnToPage(12)
   }
 
   const handleSuccess = () => {
@@ -585,9 +626,63 @@ export default function Home() {
             </BookPage>
 
             {/* ══════════════════════════════════════════════
-                SPREAD 2: VIEW 3 - BIRTHDAY DETAIL
+                SPREAD: CALENDAR  (pages 2-3)
                 ══════════════════════════════════════════════ */}
-            {/* Page 3 (Left) - Profile Portal Mount */}
+            <BookPage className="book-page-bg page-shadow-left p-8 md:p-12 flex flex-col">
+              <CalendarLedger birthdays={birthdays} month={currentMonth} />
+            </BookPage>
+            <BookPage className="book-page-bg page-shadow-right p-8 md:p-12 flex flex-col">
+              <CalendarGrid
+                birthdays={birthdays}
+                month={currentMonth}
+                onPrev={() => setCurrentMonth(subMonths(currentMonth, 1))}
+                onNext={() => setCurrentMonth(addMonths(currentMonth, 1))}
+                onPick={handleOpenAdd}
+              />
+            </BookPage>
+
+            {/* ══════════════════════════════════════════════
+                SPREAD: PEOPLE  (pages 4-5)
+                ══════════════════════════════════════════════ */}
+            <BookPage className="book-page-bg page-shadow-left p-8 md:p-12 flex flex-col">
+              <PeopleOverview birthdays={birthdays} />
+            </BookPage>
+            <BookPage className="book-page-bg page-shadow-right p-8 md:p-12 flex flex-col">
+              <PeopleList birthdays={birthdays} onSelect={handleSelectBday} />
+            </BookPage>
+
+            {/* ══════════════════════════════════════════════
+                SPREAD: CONSTELLATION  (pages 6-7)
+                ══════════════════════════════════════════════ */}
+            <BookPage className="book-page-bg page-shadow-left p-8 md:p-12 flex flex-col">
+              <ConstellationOverview birthdays={birthdays} />
+            </BookPage>
+            <BookPage className="book-page-bg page-shadow-right p-8 md:p-12 flex flex-col">
+              <ConstellationList birthdays={birthdays} onSelect={handleSelectBday} />
+            </BookPage>
+
+            {/* ══════════════════════════════════════════════
+                SPREAD: SETTINGS  (pages 8-9)
+                ══════════════════════════════════════════════ */}
+            <BookPage className="book-page-bg page-shadow-left p-8 md:p-12 flex flex-col">
+              {profile && <SettingsProfile profile={profile} onChange={(p) => setProfile({ ...profile, ...p })} />}
+            </BookPage>
+            <BookPage className="book-page-bg page-shadow-right p-8 md:p-12 flex flex-col">
+              {profile && (
+                <SettingsPrefs
+                  profile={profile}
+                  onChange={(p) => setProfile({ ...profile, ...p })}
+                  onSave={saveProfile}
+                  saving={savingProfile}
+                  onSignOut={() => signOut({ callbackUrl: "/login" })}
+                />
+              )}
+            </BookPage>
+
+            {/* ══════════════════════════════════════════════
+                SPREAD: BIRTHDAY DETAIL  (pages 10-11)
+                ══════════════════════════════════════════════ */}
+            {/* Page (Left) - Profile Portal Mount */}
             <BookPage className="book-page-bg page-shadow-left">
               <div id="profile-portal-mount" className="w-full h-full relative" />
             </BookPage>
@@ -641,48 +736,31 @@ export default function Home() {
         {/* ═══════════════════════════════════════════════════════
             PHYSICAL TABS (right edge, desktop only)
             ═══════════════════════════════════════════════════════ */}
-        <div className="hidden md:flex absolute right-0 top-12 translate-x-full flex-col gap-2 z-30">
-          {/* Index Tab */}
-          <button
-            onClick={handleBackToToc}
-            className={cn(
-              "book-tab book-tab-index",
-              !selectedBday && !isAdding && "active"
-            )}
-          >
+        <div className="hidden md:flex absolute right-0 top-8 translate-x-full flex-col gap-1.5 z-30">
+          <button onClick={() => goToPage(0, "index")} className={cn("book-tab book-tab-index", section === "index" && "active")}>
             <BookOpen className="w-4 h-4" />
             <span>Index</span>
           </button>
-
-          {/* Add New Tab */}
-          <button
-            onClick={handleOpenAdd}
-            className={cn(
-              "book-tab book-tab-add",
-              isAdding && "active"
-            )}
-          >
-            <Plus className="w-4 h-4" />
-            <span>Add New</span>
-          </button>
-
-          {/* Calendar Tab */}
-          <Link
-            href="/calendar"
-            className="book-tab book-tab-calendar"
-          >
+          <button onClick={() => goToPage(2, "calendar")} className={cn("book-tab book-tab-calendar", section === "calendar" && "active")}>
             <CalendarDays className="w-4 h-4" />
             <span>Calendar</span>
-          </Link>
-
-          {/* Settings Tab */}
-          <Link
-            href="/settings"
-            className="book-tab book-tab-settings"
-          >
+          </button>
+          <button onClick={() => goToPage(4, "people")} className={cn("book-tab book-tab-add", section === "people" && "active")}>
+            <Users className="w-4 h-4" />
+            <span>People</span>
+          </button>
+          <button onClick={() => goToPage(6, "constellation")} className={cn("book-tab book-tab-settings", section === "constellation" && "active")}>
+            <Sparkles className="w-4 h-4" />
+            <span>Stars</span>
+          </button>
+          <button onClick={() => goToPage(8, "settings")} className={cn("book-tab book-tab-calendar", section === "settings" && "active")}>
             <Settings className="w-4 h-4" />
             <span>Settings</span>
-          </Link>
+          </button>
+          <button onClick={handleOpenAdd} className={cn("book-tab book-tab-add", section === "add" && "active")}>
+            <Plus className="w-4 h-4" />
+            <span>Add</span>
+          </button>
         </div>
         </div>
       </div>

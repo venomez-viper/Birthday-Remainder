@@ -20,6 +20,7 @@ export async function GET() {
       reminderDays: true,
       timezone: true,
       ownBirthday: true,
+      avatarUrl: true,
     }
   })
 
@@ -38,7 +39,7 @@ export async function PUT(req: Request) {
   }
 
   try {
-    const { name, themePreference, reminderDays, timezone, ownBirthday } = await req.json()
+    const { name, themePreference, reminderDays, timezone, ownBirthday, avatarUrl } = await req.json()
 
     const updatedUser = await prisma.user.update({
       where: { email: session.user.email },
@@ -48,6 +49,7 @@ export async function PUT(req: Request) {
         reminderDays: reminderDays ? parseInt(reminderDays) : undefined,
         timezone,
         ownBirthday: ownBirthday ? new Date(ownBirthday) : null,
+        avatarUrl,
       },
       select: {
         id: true,
@@ -57,6 +59,7 @@ export async function PUT(req: Request) {
         reminderDays: true,
         timezone: true,
         ownBirthday: true,
+        avatarUrl: true,
       }
     })
 
