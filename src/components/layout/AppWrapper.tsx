@@ -13,7 +13,7 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
   const isHomePage = pathname === "/"
 
   return (
-    <div className={cn("min-h-screen relative overflow-hidden", session ? "wood-desk" : "bg-background")}>
+    <div className={cn("min-h-screen relative overflow-hidden wood-desk")}>
       {/* Soft vignette glow at the desk corners (drawn, blends with the wood) */}
       {session && (
         <>

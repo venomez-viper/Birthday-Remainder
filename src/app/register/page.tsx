@@ -41,23 +41,23 @@ export default function Register() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[70vh]">
-      <div className="text-center mb-10">
-        <Flower2 className="w-12 h-12 text-rose-400 mx-auto mb-4" />
-        <h1 className="text-4xl font-bold text-stone-800 mb-2">New Diary</h1>
-        <p className="text-stone-500 italic">Start recording special days</p>
+    <div className="flex flex-col items-center justify-center min-h-[80vh]">
+      <div className="text-center mb-8">
+        <Flower2 className="w-12 h-12 text-book-accent mx-auto mb-3" />
+        <h1 className="font-handwritten text-5xl text-book-cream leading-none mb-1">New Diary</h1>
+        <p className="font-serif italic text-book-muted">Start recording special days</p>
       </div>
 
-      <div className="w-full max-w-md p-8 bg-white/40 backdrop-blur-sm rounded-xl border border-stone-200 shadow-sm">
-        <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="w-full max-w-md p-8 book-page-bg rounded-2xl border border-book-border shadow-book">
+        <form onSubmit={handleSubmit} className="space-y-5">
           {error && (
-            <div className="bg-red-50 text-red-500 p-3 rounded text-sm text-center">
+            <div className="bg-red-50 text-red-600 border border-red-200 p-3 rounded-lg text-sm text-center">
               {error}
             </div>
           )}
           
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">Your Name</label>
+            <label className="block text-sm font-medium text-book-muted mb-1.5">Your Name</label>
             <input
               type="text"
               value={name}
@@ -68,7 +68,7 @@ export default function Register() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">Email</label>
+            <label className="block text-sm font-medium text-book-muted mb-1.5">Email</label>
             <input
               type="email"
               value={email}
@@ -79,7 +79,7 @@ export default function Register() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">Password</label>
+            <label className="block text-sm font-medium text-book-muted mb-1.5">Password</label>
             <input
               type="password"
               value={password}
@@ -89,14 +89,14 @@ export default function Register() {
             />
           </div>
 
-          <button type="submit" className="w-full btn-primary mt-8">
+          <button type="submit" className="w-full btn-primary mt-6">
             Create Diary
           </button>
         </form>
 
-        <p className="mt-6 text-center text-stone-600 text-sm">
+        <p className="mt-6 text-center text-book-muted text-sm font-serif">
           Already have a diary?{" "}
-          <Link href="/login" className="text-rose-500 hover:text-rose-600 font-medium underline underline-offset-4">
+          <Link href="/login" className="text-book-accent hover:text-book-accent/80 font-medium underline underline-offset-4">
             Open it here
           </Link>
         </p>

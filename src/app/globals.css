@@ -623,3 +623,15 @@
     font-family: var(--font-handwritten), cursive;
   }
 }
+
+/* ═══════════════════════════════════════════════════════
+   FORM COMPONENTS (login / register / diary inputs)
+   ═══════════════════════════════════════════════════════ */
+@layer components {
+  .input-diary {
+    @apply w-full px-4 py-2.5 rounded-lg border border-book-border bg-book-cream/80 text-book-text placeholder:text-book-muted font-serif focus:outline-none focus:ring-2 focus:ring-book-gold/40 focus:border-book-gold transition-colors;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-book-accent text-white font-serif text-base shadow-sm hover:bg-book-accent/90 transition-colors disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+}
