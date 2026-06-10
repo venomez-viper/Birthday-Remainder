@@ -10,13 +10,14 @@ import { FloatingPetals } from "./FloatingPetals"
 export function AppWrapper({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession()
   const pathname = usePathname()
-  const isHomePage = pathname === "/"
-  const isLandingPage = isHomePage && !session
+  // Public marketing pages render full-bleed with their own nav/footer (SaaS feel) —
+  // never inside the app's constrained container.
+  const marketingRoutes = ["/", "/about", "/story", "/pricing", "/features", "/contact"]
+  const isMarketing = marketingRoutes.includes(pathname) || pathname.startsWith("/legal")
   // The diary book needs the full viewport (no max-width / padding box).
-  const isImmersive = isHomePage || pathname === "/dashboard"
+  const isImmersive = pathname === "/dashboard"
 
-  // Landing page renders without any app chrome
-  if (isLandingPage) {
+  if (isMarketing) {
     return <>{children}</>
   }
 

@@ -104,14 +104,18 @@ export default function BirthdayForm({ onSuccess }: BirthdayFormProps) {
       onMouseDownCapture={(e) => e.stopPropagation()}
       onTouchStartCapture={(e) => e.stopPropagation()}
     >
-      <div className="flex items-center justify-between mb-6 border-b border-book-border/50 pb-4">
-        <div className="flex items-center gap-2 text-book-accent">
+      {/* Soft floral header */}
+      <div className="text-center mb-5">
+        <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-book-accent/15 to-book-gold/15 text-book-accent mb-2 shadow-[0_6px_16px_rgba(139,76,94,0.12)]">
           <CalendarHeart className="w-6 h-6" />
-          <h3 className="font-handwritten text-2xl md:text-3xl text-book-text font-bold">Record Birthday</h3>
         </div>
-        
+        <h3 className="font-handwritten text-3xl md:text-4xl text-book-accent leading-none">Record a Birthday</h3>
+        <div className="floral-divider mt-2 scale-75 opacity-80" />
+      </div>
+
+      <div className="flex items-center justify-center mb-5">
         {/* Input Mode Toggle buttons */}
-        <div className="flex bg-book-cream/50 rounded-full p-1 border border-book-border/50">
+        <div className="flex bg-book-cream/60 rounded-full p-1 border border-book-border/60 shadow-inner">
           <button
             type="button"
             onClick={() => setMode("form")}

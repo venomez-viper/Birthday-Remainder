@@ -46,10 +46,10 @@ import React, { useRef } from "react"
 
 // Page-turn animation for switching diary sections (button-triggered flip).
 const spreadMotion = {
-  initial: { rotateY: 75, opacity: 0 },
+  initial: { rotateY: -105, opacity: 0 },
   animate: { rotateY: 0, opacity: 1 },
-  exit: { rotateY: -75, opacity: 0 },
-  transition: { duration: 0.5, ease: "easeInOut" as const },
+  exit: { rotateY: 105, opacity: 0 },
+  transition: { duration: 0.55, ease: [0.33, 0.0, 0.2, 1] as const },
 }
 
 interface Birthday {
