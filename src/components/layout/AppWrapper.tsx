@@ -3,7 +3,6 @@
 import { useSession } from "next-auth/react"
 import { usePathname } from "next/navigation"
 import { Navbar } from "./Navbar"
-import { ThemeSwitcher } from "@/components/ThemeSwitcher"
 import { cn } from "@/lib/utils"
 import { FloatingPetals } from "./FloatingPetals"
 
@@ -30,7 +29,6 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
       {session && <FloatingPetals />}
 
       <Navbar />
-      <ThemeSwitcher />
 
       {/* Content area */}
       <div
