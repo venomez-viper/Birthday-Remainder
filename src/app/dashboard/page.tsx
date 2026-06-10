@@ -225,7 +225,6 @@ export default function Home() {
   const todaysBirthdays = sortedBirthdays.filter(b => b.daysUntil === 0)
   const upcomingBirthdays = sortedBirthdays.filter(b => b.daysUntil > 0)
   const nextBirthday = sortedBirthdays[0]
-
   const filteredBirthdays = sortedBirthdays.filter(b => 
     b.name.toLowerCase().includes(searchQuery.toLowerCase())
   )
@@ -525,28 +524,30 @@ export default function Home() {
             </BookPage>
 
             {/* Page 2 (Right) - CELEBRATIONS & STATS */}
-            <BookPage className="book-page-bg page-shadow-right p-8 md:p-14 flex flex-col pb-10">
+            <BookPage className="book-page-bg page-shadow-right p-6 md:p-10 flex flex-col min-h-0 overflow-hidden">
               <div className="floral-corner-tr" />
               <div className="floral-corner-br" />
               
-              <div className="space-y-6 relative z-10 flex-1 flex flex-col">
+              <div className="overview-page-layout relative z-10 flex-1 min-h-0 overflow-hidden">
                 {/* Top Section: Celebrations Today */}
-                <div className="text-center relative pt-8 pb-4">
+                <div className="overview-hero text-center relative">
                   <div className="relative z-10">
-                    <p className="text-[10px] uppercase font-serif text-book-muted tracking-[0.2em] mb-4">Celebrations Today</p>
+                    <p className="text-[10px] uppercase font-serif text-book-muted tracking-[0.2em] mb-3">
+                      {todaysBirthdays.length > 0 ? "Celebrations Today" : "Next Birthday"}
+                    </p>
                     {todaysBirthdays.length > 0 ? (
                       todaysBirthdays.map(b => (
                         <div key={b.id} className="cursor-pointer group" onClick={() => handleSelectBday(b)}>
                           <div className="flex items-center justify-center gap-4">
                             <Heart className="w-5 h-5 text-book-accent/40 group-hover:text-book-accent transition-colors" />
-                            <h3 className="font-handwritten text-5xl md:text-7xl text-book-accent font-bold group-hover:scale-105 transition-transform drop-shadow-sm break-words leading-tight max-w-full text-center">
+                            <h3 className="font-serif text-3xl md:text-4xl text-book-accent font-semibold group-hover:scale-105 transition-transform drop-shadow-sm break-words leading-tight max-w-full text-center">
                               {b.name}
                             </h3>
                             <Heart className="w-5 h-5 text-book-accent/40 group-hover:text-book-accent transition-colors" />
                           </div>
-                          <div className="flex items-center justify-center gap-3 mt-4 opacity-80">
+                          <div className="flex items-center justify-center gap-3 mt-3 opacity-80">
                             <Leaf className="w-4 h-4 text-book-accent/70" />
-                            <span className="font-serif text-book-text font-bold text-xl md:text-2xl tracking-wide">
+                            <span className="font-serif text-book-text font-bold text-lg md:text-xl tracking-wide">
                               {format(new Date(b.date), "MMM dd")}
                             </span>
                             <Leaf className="w-4 h-4 text-book-accent/70 -scale-x-100" />
@@ -557,14 +558,14 @@ export default function Home() {
                       <div className="cursor-pointer group" onClick={() => handleSelectBday(nextBirthday)}>
                          <div className="flex items-center justify-center gap-4">
                             <Heart className="w-5 h-5 text-book-accent/40 group-hover:text-book-accent transition-colors" />
-                            <h3 className="font-handwritten text-5xl md:text-7xl text-book-accent font-bold group-hover:scale-105 transition-transform drop-shadow-sm break-words leading-tight max-w-full text-center">
+                            <h3 className="font-serif text-3xl md:text-4xl text-book-accent font-semibold group-hover:scale-105 transition-transform drop-shadow-sm break-words leading-tight max-w-full text-center">
                               {nextBirthday.name}
                             </h3>
                             <Heart className="w-5 h-5 text-book-accent/40 group-hover:text-book-accent transition-colors" />
                           </div>
-                          <div className="flex items-center justify-center gap-3 mt-4 opacity-80">
+                          <div className="flex items-center justify-center gap-3 mt-3 opacity-80">
                             <Leaf className="w-4 h-4 text-book-accent/70" />
-                            <span className="font-serif text-book-text font-bold text-xl md:text-2xl tracking-wide">
+                            <span className="font-serif text-book-text font-bold text-lg md:text-xl tracking-wide">
                               {format(new Date(nextBirthday.date), "MMM dd")}
                             </span>
                             <Leaf className="w-4 h-4 text-book-accent/70 -scale-x-100" />
@@ -578,57 +579,57 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="flex-1 flex flex-col justify-end space-y-4">
+                <div className="overview-lower min-h-0 overflow-hidden">
                   {/* Stats Card */}
-                  <div className="bg-book-card-warm border border-book-line shadow-[2px_2px_8px_rgba(0,0,0,0.1)] rounded-sm p-4 md:p-6 grid grid-cols-3 gap-2">
+                  <div className="bg-book-card-warm border border-book-line shadow-[2px_2px_8px_rgba(0,0,0,0.1)] rounded-sm p-3 grid grid-cols-3 gap-2 min-h-0">
                     <div className="text-center border-r border-book-border/20 last:border-0 flex flex-col justify-center">
-                      <Gift className="w-5 h-5 mx-auto mb-2 text-book-accent/70" />
-                      <span className="font-serif text-3xl md:text-4xl text-book-text mb-1">{birthdaysThisMonth}</span>
+                      <Gift className="w-4 h-4 mx-auto mb-1.5 text-book-accent/70" />
+                      <span className="font-serif text-2xl md:text-3xl text-book-text mb-1">{birthdaysThisMonth}</span>
                       <span className="text-[10px] md:text-[11px] text-book-muted uppercase font-serif tracking-wider leading-tight">Birthdays<br/>This Month</span>
                     </div>
                     <div className="text-center border-r border-book-border/20 last:border-0 flex flex-col justify-center">
-                      <Cake className="w-5 h-5 mx-auto mb-2 text-book-accent/70" />
-                      <span className="font-serif text-3xl md:text-4xl text-book-text mb-1">{birthdaysThisWeek}</span>
+                      <Cake className="w-4 h-4 mx-auto mb-1.5 text-book-accent/70" />
+                      <span className="font-serif text-2xl md:text-3xl text-book-text mb-1">{birthdaysThisWeek}</span>
                       <span className="text-[10px] md:text-[11px] text-book-muted uppercase font-serif tracking-wider leading-tight">Celebrations<br/>This Week</span>
                     </div>
                     <div className="text-center border-r border-book-border/20 last:border-0 flex flex-col justify-center">
-                      <Users className="w-5 h-5 mx-auto mb-2 text-book-accent/70" />
-                      <span className="font-serif text-3xl md:text-4xl text-book-text mb-1">{totalCount}</span>
+                      <Users className="w-4 h-4 mx-auto mb-1.5 text-book-accent/70" />
+                      <span className="font-serif text-2xl md:text-3xl text-book-text mb-1">{totalCount}</span>
                       <span className="text-[10px] md:text-[11px] text-book-muted uppercase font-serif tracking-wider leading-tight">Friends in<br/>Your Diary</span>
                     </div>
                   </div>
 
                   {/* Quote Banner */}
-                  <div className="bg-book-sage border border-book-sage-line shadow-[2px_2px_8px_rgba(0,0,0,0.1)] rounded-sm p-5 md:p-6 text-center relative overflow-hidden">
-                    <p className="font-handwritten text-book-text text-xl md:text-2xl italic leading-relaxed">
-                      Every birthday is a reminder<br/>to celebrate life and the people<br/>who make it special.
+                  <div className="bg-book-sage border border-book-sage-line shadow-[2px_2px_8px_rgba(0,0,0,0.1)] rounded-sm p-3 md:p-4 text-center relative overflow-hidden min-h-0">
+                    <p className="font-serif text-book-text text-sm md:text-base italic leading-relaxed">
+                      Every birthday is a reminder<br/>to celebrate life and the people who make it special.
                     </p>
-                    <Heart className="w-3.5 h-3.5 mx-auto mt-3 text-book-accent/50" />
+                    <Heart className="w-3.5 h-3.5 mx-auto mt-2 text-book-accent/50" />
                   </div>
 
                   {/* Upcoming Birthdays Section */}
-                  <div className="bg-book-card border border-book-line shadow-[2px_2px_8px_rgba(0,0,0,0.1)] rounded-sm p-5 md:p-6">
-                    <div className="flex items-center justify-center gap-3 mb-4">
+                  <div className="upcoming-card bg-book-card border border-book-line shadow-[2px_2px_8px_rgba(0,0,0,0.1)] rounded-sm p-3 md:p-4 min-h-0 flex flex-col overflow-hidden">
+                    <div className="flex items-center justify-center gap-3 mb-3 shrink-0">
                       <span className="h-px w-6 bg-book-border" />
                       <span className="text-[11px] uppercase font-serif tracking-[0.2em] text-book-muted">Upcoming Birthdays</span>
                       <span className="h-px w-6 bg-book-border" />
                     </div>
                     
-                    <div className="space-y-3">
-                      {upcomingBirthdays.slice(0, 2).map(b => (
-                        <div key={b.id} className="flex items-center gap-4 cursor-pointer hover:bg-book-cream/50 p-2 rounded transition-colors" onClick={() => handleSelectBday(b)}>
-                          <div className="border border-book-line bg-book-cream rounded-sm w-12 h-12 flex flex-col items-center justify-center shrink-0 shadow-sm">
+                    <div className="space-y-2 flex-1 min-h-0 max-h-full overflow-y-auto overscroll-contain pr-1 scrollbar-thin">
+                      {upcomingBirthdays.map(b => (
+                        <button type="button" key={b.id} className="w-full flex items-center gap-3 cursor-pointer hover:bg-book-cream/50 p-2 rounded transition-colors text-left" onClick={() => handleSelectBday(b)}>
+                          <div className="border border-book-line bg-book-cream rounded-sm w-11 h-11 flex flex-col items-center justify-center shrink-0 shadow-sm">
                             <span className="text-[8px] uppercase tracking-wider text-book-muted font-serif leading-none mt-1">{format(new Date(b.date), "MMM")}</span>
-                            <span className="text-xl font-serif text-book-text leading-tight">{format(new Date(b.date), "dd")}</span>
+                            <span className="text-lg font-serif text-book-text leading-tight">{format(new Date(b.date), "dd")}</span>
                           </div>
                           <div className="flex-1 min-w-0 flex flex-col justify-center">
                             <span className="font-serif font-bold text-book-text text-sm md:text-base truncate">{b.name}</span>
                             <span className="font-serif text-book-muted text-xs md:text-sm truncate">
-                              {format(new Date(b.date), "EEEE, dd MMMM")}
+                              {b.daysUntil === 1 ? "Tomorrow" : `in ${b.daysUntil} days`} - {format(new Date(b.date), "EEEE")}
                             </span>
                           </div>
                           <ChevronRight className="w-4 h-4 text-book-muted/60 shrink-0" />
-                        </div>
+                        </button>
                       ))}
                       {upcomingBirthdays.length === 0 && (
                         <p className="text-xs text-book-muted italic text-center font-serif">No upcoming birthdays found.</p>

@@ -341,6 +341,42 @@
   border-top: 1px solid rgba(212, 197, 169, 0.42);
 }
 
+.upcoming-card {
+  contain: layout paint;
+  min-height: 0;
+}
+
+.upcoming-card button {
+  min-height: 0;
+}
+
+.overview-page-layout {
+  display: grid;
+  grid-template-rows: minmax(92px, 0.72fr) minmax(0, 1.28fr);
+  gap: 0.65rem;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.overview-hero {
+  min-height: 0;
+  overflow: hidden;
+  padding-top: 0.25rem;
+}
+
+.overview-lower {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: 0.55rem;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.overview-lower .upcoming-card {
+  height: 100%;
+}
+
 /* ═══════════════════════════════════════════════════════
    BOOK CONTAINER & COVER
    ═══════════════════════════════════════════════════════ */

@@ -121,8 +121,8 @@ export function BirthdayMobileView({
             <h2 className="text-[11px] uppercase font-serif tracking-[0.2em] text-book-muted">Upcoming</h2>
             <span className="h-px flex-1 bg-book-border/50" />
           </div>
-          <div className="space-y-2">
-            {upcomingBirthdays.slice(0, 3).map((b) => (
+          <div className="space-y-2 max-h-80 overflow-y-auto overscroll-contain pr-1 scrollbar-thin">
+            {upcomingBirthdays.map((b) => (
               <button
                 key={b.id}
                 onClick={() => onSelect(b)}
