@@ -1,7 +1,7 @@
 "use client"
 
 import { format } from "date-fns"
-import { Search, Plus, Cake, Gift, Users, CalendarDays, Settings, Leaf, ChevronRight } from "lucide-react"
+import { Search, Plus, Cake, Gift, Users, CalendarDays, Settings, Leaf, ChevronRight, LogOut } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 
@@ -28,6 +28,7 @@ interface BirthdayMobileViewProps {
   birthdaysThisWeek: number
   onSelect: (b: Birthday) => void
   onAdd: () => void
+  onSignOut: () => void
 }
 
 export function BirthdayMobileView({
@@ -42,6 +43,7 @@ export function BirthdayMobileView({
   birthdaysThisWeek,
   onSelect,
   onAdd,
+  onSignOut,
 }: BirthdayMobileViewProps) {
   return (
     <div className="w-full min-h-full px-4 pt-5 pb-28">
@@ -51,9 +53,19 @@ export function BirthdayMobileView({
           <h1 className="font-handwritten text-4xl text-book-text leading-none">Birthday Diary</h1>
           <p className="font-serif italic text-book-muted text-xs mt-1">Every birthday, a beautiful memory</p>
         </div>
-        <div className="text-right shrink-0">
-          <span className="block font-serif text-sm text-book-text font-medium">{format(today, "MMM dd")}</span>
-          <span className="block font-serif text-[11px] text-book-muted italic">{format(today, "EEEE")}</span>
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="text-right">
+            <span className="block font-serif text-sm text-book-text font-medium">{format(today, "MMM dd")}</span>
+            <span className="block font-serif text-[11px] text-book-muted italic">{format(today, "EEEE")}</span>
+          </div>
+          <button
+            type="button"
+            onClick={onSignOut}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-book-border bg-book-paper text-book-text shadow-sm active:scale-95 transition-transform"
+            aria-label="Log out"
+          >
+            <LogOut className="h-4 w-4" />
+          </button>
         </div>
       </header>
 

@@ -21,7 +21,8 @@ import {
   Cake,
   Gift,
   Users,
-  Leaf
+  Leaf,
+  LogOut
 } from "lucide-react"
 import Link from "next/link"
 import { getZodiac } from "@/lib/zodiac"
@@ -359,6 +360,7 @@ export default function Home() {
             birthdaysThisWeek={birthdaysThisWeek}
             onSelect={handleSelectBday}
             onAdd={handleOpenAdd}
+            onSignOut={() => signOut({ callbackUrl: "/login" })}
           />
           <AnimatePresence>
             {selectedBday && (
@@ -416,6 +418,15 @@ export default function Home() {
             </span>
           </div>
           <ChevronRight className="w-4 h-4 text-book-muted cursor-pointer hover:text-book-text transition-colors opacity-50" />
+          <button
+            type="button"
+            onClick={() => signOut({ callbackUrl: "/login" })}
+            className="ml-2 inline-flex h-9 w-9 items-center justify-center rounded-full border border-book-border bg-book-paper text-book-text shadow-sm transition-colors hover:bg-book-cream focus:outline-none focus:ring-2 focus:ring-book-gold/50"
+            aria-label="Log out"
+            title="Log out"
+          >
+            <LogOut className="h-4 w-4" />
+          </button>
         </div>
       </div>
 
