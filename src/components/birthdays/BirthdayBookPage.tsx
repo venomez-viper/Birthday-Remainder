@@ -12,10 +12,18 @@ import {
   Check, 
   Copy, 
   Wand2, 
-  Loader2, 
+  Loader2,
   ChevronLeft,
   PenTool,
-  Heart
+  Heart,
+  Star,
+  Gem,
+  CalendarClock,
+  Cake,
+  Users,
+  ScrollText,
+  BookHeart,
+  Clock
 } from "lucide-react"
 import { format } from "date-fns"
 import { Button } from "@/components/ui/button"
@@ -118,6 +126,28 @@ export function BirthdayBookPage({ birthday, onBack, onUpdate, onDelete }: Birth
 
   const zodiac = getZodiac(birthday.date)
   const age = Math.floor((Date.now() - new Date(birthday.date).getTime()) / 31557600000)
+
+  // Days until the next occurrence of their birthday (month/day) from today.
+  const computeDaysUntil = () => {
+    const bd = new Date(birthday.date)
+    const now = new Date()
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    let next = new Date(today.getFullYear(), bd.getMonth(), bd.getDate())
+    if (next.getTime() < today.getTime()) {
+      next = new Date(today.getFullYear() + 1, bd.getMonth(), bd.getDate())
+    }
+    return Math.round((next.getTime() - today.getTime()) / 86400000)
+  }
+  const daysUntil = computeDaysUntil()
+
+  // Interests split into clean tags.
+  const interestTags = (birthday.interests || "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean)
+
+  const relationshipLabel = (birthday.relationship || "friend")
+    .replace(/^\w/, (c) => c.toUpperCase())
 
   // Compute initials
   const nameParts = birthday.name.trim().split(/\s+/)
@@ -445,18 +475,12 @@ export function BirthdayBookPage({ birthday, onBack, onUpdate, onDelete }: Birth
               </div>
             </form>
           ) : (
-            /* ── PROFILE DISPLAY ── */
-            <div className="flex flex-col items-center flex-1 justify-center pt-4">
-              
-              <div className="flex items-center justify-center gap-3 mb-8">
-                <span className="h-px w-6 bg-book-border" />
-                <span className="text-[11px] uppercase font-serif tracking-[0.2em] text-book-muted">Birthday Detail</span>
-                <span className="h-px w-6 bg-book-border" />
-              </div>
+            /* ── PROFILE DISPLAY (Identity) ── */
+            <div className="flex flex-col items-center flex-1 pt-2 overflow-y-auto scrollbar-thin">
 
               {/* Oval portrait medallion with initials */}
-              <div className="relative w-full flex items-center justify-center mb-8 py-4">
-                <div className="relative w-60 h-80 md:w-72 md:h-96">
+              <div className="relative w-full flex items-center justify-center mb-6 py-2 shrink-0">
+                <div className="relative w-44 h-60 md:w-52 md:h-72">
                   {/* Outer gold ring */}
                   <div className="absolute inset-0 rounded-[50%] border border-book-gold/40" />
                   {/* Inner framed portrait area */}
@@ -467,7 +491,7 @@ export function BirthdayBookPage({ birthday, onBack, onUpdate, onDelete }: Birth
                     ) : (
                       <>
                         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-book-card-warm opacity-50" />
-                        <span className="font-handwritten text-[7rem] md:text-[9rem] text-book-accent/80 leading-none relative z-10">
+                        <span className="font-handwritten text-[5rem] md:text-[6.5rem] text-book-accent/80 leading-none relative z-10">
                           {initials}
                         </span>
                       </>
@@ -476,14 +500,108 @@ export function BirthdayBookPage({ birthday, onBack, onUpdate, onDelete }: Birth
                 </div>
               </div>
 
-              {/* Decorative date badge (matching the March 12 plaque) */}
-              <div className="relative z-20 -mt-16">
-                <div className="vintage-card px-10 py-4 shadow-lg border border-book-line">
-                  <span className="text-xl md:text-2xl font-serif text-book-text">
-                    {monthName} {dayNumber}
+              {/* Name — the ONLY prominent name across the spread */}
+              <h2 className="font-handwritten text-5xl md:text-6xl text-book-text text-center leading-tight mb-2 shrink-0">
+                {birthday.name}
+              </h2>
+
+              {/* Relationship badge */}
+              <div className="flex items-center justify-center gap-2 mb-5 shrink-0">
+                <Users className="w-3.5 h-3.5 text-book-muted" />
+                <span className="text-[11px] uppercase font-serif tracking-[0.25em] text-book-muted">
+                  {relationshipLabel}
+                </span>
+              </div>
+
+              {/* Birth date plaque */}
+              <div className="relative z-20 mb-6 shrink-0">
+                <div className="vintage-card px-8 py-3 shadow-lg border border-book-line text-center">
+                  <span className="block text-lg md:text-xl font-serif text-book-text">
+                    {monthName} {dayNumber}, {yearNumber}
                   </span>
                 </div>
               </div>
+
+              {/* Fact grid: Turning N + Countdown */}
+              <div className="grid grid-cols-2 gap-4 w-full max-w-sm mb-6 shrink-0">
+                <div className="flex flex-col items-center text-center border border-book-border/60 rounded-lg bg-book-card/40 py-4 px-2">
+                  <Cake className="w-5 h-5 text-book-accent/70 mb-1.5" />
+                  <span className="font-handwritten text-3xl text-book-text leading-none">{age + (daysUntil === 0 ? 0 : 1) }</span>
+                  <span className="text-[10px] uppercase tracking-[0.2em] font-serif text-book-muted mt-1">
+                    {daysUntil === 0 ? `Turned ${age}` : "Turning"}
+                  </span>
+                </div>
+                <div className="flex flex-col items-center text-center border border-book-border/60 rounded-lg bg-book-card/40 py-4 px-2">
+                  <CalendarClock className="w-5 h-5 text-book-accent/70 mb-1.5" />
+                  <span className="font-handwritten text-3xl text-book-text leading-none">
+                    {daysUntil === 0 ? "Today" : daysUntil}
+                  </span>
+                  <span className="text-[10px] uppercase tracking-[0.2em] font-serif text-book-muted mt-1">
+                    {daysUntil === 0 ? "Celebrate!" : daysUntil === 1 ? "Day to go" : "Days to go"}
+                  </span>
+                </div>
+              </div>
+
+              {/* Zodiac strip */}
+              <div className="w-full max-w-sm mb-6 shrink-0">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="text-[11px] uppercase font-serif tracking-[0.2em] text-book-muted">Under the Stars</span>
+                  <div className="h-px bg-book-border/40 flex-1" />
+                </div>
+                <div className="flex items-stretch gap-3">
+                  <div className="flex items-center gap-3 flex-1 border border-book-border/60 rounded-lg bg-book-card/40 px-4 py-3">
+                    <span className="text-3xl leading-none">{zodiac.emoji}</span>
+                    <div className="flex flex-col">
+                      <span className="font-serif text-lg text-book-text leading-tight">{zodiac.name}</span>
+                      <span className="flex items-center gap-1 text-[11px] font-serif text-book-muted">
+                        <Star className="w-3 h-3" /> {zodiac.element}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-center justify-center border border-book-border/60 rounded-lg bg-book-card/40 px-4 py-3 text-center">
+                    <Gem className="w-4 h-4 text-book-accent/70 mb-1" />
+                    <span className="font-serif text-sm text-book-text leading-tight">{zodiac.stone}</span>
+                    <span className="text-[9px] uppercase tracking-[0.15em] font-serif text-book-muted">Birthstone</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Interests as chips */}
+              {interestTags.length > 0 && (
+                <div className="w-full max-w-sm mb-6 shrink-0">
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="text-[11px] uppercase font-serif tracking-[0.2em] text-book-muted">Fond Of</span>
+                    <div className="h-px bg-book-border/40 flex-1" />
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {interestTags.map((tag, i) => (
+                      <span
+                        key={i}
+                        className="px-3 py-1 rounded-full border border-book-line bg-book-cream text-book-text font-serif text-sm shadow-sm"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Journal note */}
+              {birthday.notes && (
+                <div className="w-full max-w-sm mb-2 shrink-0">
+                  <div className="flex items-center gap-3 mb-3">
+                    <ScrollText className="w-3.5 h-3.5 text-book-muted" />
+                    <span className="text-[11px] uppercase font-serif tracking-[0.2em] text-book-muted">Journal Note</span>
+                    <div className="h-px bg-book-border/40 flex-1" />
+                  </div>
+                  <div className="relative bg-book-card/40 border border-book-border/60 rounded-lg px-5 py-4">
+                    <span className="absolute -top-2 left-4 font-handwritten text-4xl text-book-accent/40 leading-none">&ldquo;</span>
+                    <p className="font-handwritten text-xl md:text-2xl text-book-text leading-relaxed italic whitespace-pre-line">
+                      {birthday.notes}
+                    </p>
+                  </div>
+                </div>
+              )}
 
             </div>
           )}
@@ -595,97 +713,269 @@ export function BirthdayBookPage({ birthday, onBack, onUpdate, onDelete }: Birth
             </form>
           </div>
         ) : (
-          /* ── STANDARD BOOK VIEWS ── */
-          <div className="flex-1 flex flex-col relative z-10 space-y-6">
-            
-            {/* Top header - Person name */}
-            <div className="text-center pb-4 relative">
-              <h2 className="font-serif text-4xl md:text-5xl text-book-text tracking-wider">
-                {birthday.name}
-              </h2>
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-[1px] bg-book-border/60">
+          /* ── CELEBRATE / ACTIVITY ── */
+          <div className="flex-1 flex flex-col relative z-10 min-h-0">
+
+            {/* Header — tiny subtitle only, no prominent name/date */}
+            <div className="text-center pb-4 shrink-0 relative">
+              <span className="text-[10px] md:text-xs uppercase tracking-[0.3em] font-serif text-book-muted">
+                Celebration Planner
+              </span>
+              <p className="font-serif text-sm italic text-book-muted/80 mt-1">
+                for {birthday.name.split(" ")[0]}
+              </p>
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-24 h-[1px] bg-book-border/60">
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full border border-book-border/60 bg-book-paper" />
               </div>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-8 flex-1 overflow-y-auto scrollbar-thin pr-2 mt-4">
-              <div className="flex-1 space-y-8 pb-4">
-                {/* Notes & Wishes */}
-                <div className="space-y-4">
-                  <h3 className="font-serif text-lg text-book-text flex items-center gap-3">
-                     Notes &amp; Wishes
-                     <div className="h-px bg-book-border/40 flex-1" />
-                  </h3>
-                  <div className="font-handwritten text-xl md:text-2xl text-book-text leading-loose italic whitespace-pre-line pr-4">
-                    {birthday.notes || (
-                      <span className="text-book-muted">
-                        No notes recorded yet. They are a kind soul...
-                      </span>
-                    )}
-                  </div>
-                </div>
+            {/* Tab strip */}
+            <div className="flex items-center justify-center gap-1 mt-4 mb-5 shrink-0">
+              {([
+                { key: "gifts", label: "Gift Ideas", icon: Gift },
+                { key: "wishes", label: "Birthday Wish", icon: Sparkles },
+                { key: "history", label: "Scrapbook", icon: BookHeart },
+              ] as const).map(({ key, label, icon: Icon }) => (
+                <button
+                  key={key}
+                  onClick={() => setActiveTab(key)}
+                  className={cn(
+                    "flex items-center gap-1.5 px-3 md:px-4 py-2 rounded-full text-xs md:text-sm font-serif transition-colors border",
+                    activeTab === key
+                      ? "bg-book-text text-book-cream border-book-text shadow-sm"
+                      : "border-book-border text-book-muted hover:bg-book-cream"
+                  )}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                  {label}
+                </button>
+              ))}
+            </div>
 
-                {/* Gift Ideas */}
-                <div className="space-y-4">
+            <div className="flex-1 overflow-y-auto scrollbar-thin pr-2 min-h-0">
+
+              {/* ── GIFTS TAB ── */}
+              {activeTab === "gifts" && (
+                <div className="space-y-5">
                   <h3 className="font-serif text-lg text-book-text flex items-center gap-3">
-                     Gift Ideas
-                     <div className="h-px bg-book-border/40 flex-1" />
+                    <Gift className="w-4 h-4 text-book-accent/70" /> Gift Ideas
+                    <div className="h-px bg-book-border/40 flex-1" />
                   </h3>
-                  <ul className="space-y-2 pl-2">
+
+                  {/* Add a gift + AI suggest */}
+                  <div className="flex gap-2">
+                    <Input
+                      value={newGiftTitle}
+                      onChange={(e) => setNewGiftTitle(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault()
+                          handleAddGift(newGiftTitle)
+                        }
+                      }}
+                      placeholder="Add a gift idea..."
+                      className="bg-transparent border-t-0 border-x-0 border-b border-book-border rounded-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-book-gold text-book-text font-serif"
+                    />
+                    <Button
+                      type="button"
+                      onClick={() => handleAddGift(newGiftTitle)}
+                      className="bg-book-text hover:bg-book-text/90 text-book-cream rounded-full px-4 shrink-0"
+                    >
+                      <Plus className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      type="button"
+                      onClick={handleSuggestGifts}
+                      disabled={suggestingGifts}
+                      variant="outline"
+                      className="border-book-border text-book-text hover:bg-book-cream rounded-full px-4 shrink-0 font-serif"
+                    >
+                      {suggestingGifts ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wand2 className="w-4 h-4" />}
+                    </Button>
+                  </div>
+
+                  {/* Gift checklist */}
+                  <ul className="space-y-2">
                     {gifts.length > 0 ? (
-                      gifts.map(g => (
-                        <li key={g.id} className="flex items-center gap-3">
-                          <div className="w-1.5 h-1.5 rounded-full bg-book-accent/60 mt-2 self-start" />
-                          <span className="font-handwritten text-xl md:text-2xl text-book-text leading-tight">{g.title}</span>
+                      gifts.map((g) => (
+                        <li
+                          key={g.id}
+                          className="group flex items-start gap-3 border-b border-book-border/30 pb-2"
+                        >
+                          <button
+                            type="button"
+                            onClick={() => handleToggleGift(g.id, g.status)}
+                            className={cn(
+                              "mt-1 w-5 h-5 shrink-0 rounded-full border flex items-center justify-center transition-colors",
+                              g.status === "purchased"
+                                ? "bg-book-accent/70 border-book-accent text-white"
+                                : "border-book-border text-transparent hover:border-book-accent"
+                            )}
+                            aria-label="Toggle purchased"
+                          >
+                            <Check className="w-3.5 h-3.5" />
+                          </button>
+                          <span
+                            className={cn(
+                              "font-handwritten text-xl md:text-2xl leading-tight flex-1",
+                              g.status === "purchased"
+                                ? "text-book-muted line-through"
+                                : "text-book-text"
+                            )}
+                          >
+                            {g.title}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteGift(g.id)}
+                            className="mt-1 text-book-muted/40 hover:text-red-600 transition-colors opacity-0 group-hover:opacity-100"
+                            aria-label="Delete gift"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
                         </li>
                       ))
                     ) : (
-                      <li className="flex items-center gap-3">
-                        <div className="w-1.5 h-1.5 rounded-full bg-book-accent/40 mt-2 self-start" />
-                        <span className="font-handwritten text-xl text-book-muted italic">Pressed flower journal</span>
+                      <li className="font-handwritten text-xl text-book-muted italic py-2">
+                        No gift ideas yet. Add one above, or let the muse suggest a few.
                       </li>
                     )}
                   </ul>
                 </div>
+              )}
 
-                {/* AI Birthday Wish */}
-                <div className="space-y-4">
+              {/* ── WISHES TAB ── */}
+              {activeTab === "wishes" && (
+                <div className="space-y-5">
                   <h3 className="font-serif text-lg text-book-text flex items-center gap-3">
-                     AI Birthday Wish
-                     <div className="h-px bg-book-border/40 flex-1" />
+                    <Sparkles className="w-4 h-4 text-book-accent/70" /> AI Birthday Wish
+                    <div className="h-px bg-book-border/40 flex-1" />
                   </h3>
-                  <div className="font-handwritten text-xl md:text-2xl text-book-text leading-loose italic whitespace-pre-line pr-4">
-                    {generatedWish || (
-                      <>
-                        May your day be filled with love,<br/>
-                        laughter, and all the beautiful<br/>
-                        things your heart desires.<br/>
-                        Happy Birthday, {birthday.name.split(" ")[0]}!{" "}
-                        <Heart className="inline w-5 h-5 -mt-1 text-book-accent/70 fill-book-accent/20" />
-                      </>
+
+                  <div className="flex flex-wrap items-center gap-3">
+                    <label className="text-[10px] uppercase font-bold text-book-muted tracking-wider">Tone</label>
+                    <select
+                      value={wishTone}
+                      onChange={(e) => setWishTone(e.target.value)}
+                      className="flex h-10 bg-transparent border-t-0 border-x-0 border-b border-book-border rounded-none focus:outline-none focus:border-book-gold text-book-text font-serif text-sm px-1"
+                    >
+                      <option value="heartfelt">Heartfelt</option>
+                      <option value="funny">Funny</option>
+                      <option value="poetic">Poetic</option>
+                      <option value="formal">Formal</option>
+                      <option value="playful">Playful</option>
+                    </select>
+                    <Button
+                      type="button"
+                      onClick={handleGenerateWish}
+                      disabled={generatingWish}
+                      className="bg-book-accent hover:bg-book-accent/90 text-white rounded-full px-5 font-serif"
+                    >
+                      {generatingWish ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Wand2 className="w-4 h-4 mr-2" />}
+                      Generate
+                    </Button>
+                  </div>
+
+                  {/* Wish display */}
+                  <div className="relative bg-book-card/40 border border-book-border/60 rounded-lg px-5 py-5 min-h-[140px]">
+                    <div className="font-handwritten text-xl md:text-2xl text-book-text leading-loose italic whitespace-pre-line pr-8">
+                      {generatedWish || (
+                        <>
+                          May your day be filled with love,<br />
+                          laughter, and all the beautiful<br />
+                          things your heart desires.<br />
+                          Happy Birthday, {birthday.name.split(" ")[0]}!{" "}
+                          <Heart className="inline w-5 h-5 -mt-1 text-book-accent/70 fill-book-accent/20" />
+                        </>
+                      )}
+                    </div>
+                    {generatedWish && (
+                      <button
+                        type="button"
+                        onClick={handleCopyWish}
+                        className="absolute top-3 right-3 text-book-muted hover:text-book-text transition-colors"
+                        aria-label="Copy wish"
+                      >
+                        {copied ? <Check className="w-4 h-4 text-book-accent" /> : <Copy className="w-4 h-4" />}
+                      </button>
                     )}
                   </div>
                 </div>
-              </div>
+              )}
 
-              {/* Right column: Pinned Note */}
-              <div className="w-full md:w-48 shrink-0 flex justify-center items-start pt-4">
-                <div className="bg-book-cream border border-book-line rounded-sm p-4 w-40 rotate-3 shadow-[3px_5px_15px_rgba(0,0,0,0.12)] relative">
-                   {/* Push pin */}
-                   <div className="absolute top-[-8px] left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full bg-gradient-to-br from-[#d4c38d] to-[#8a7a49] shadow-[1px_2px_4px_rgba(0,0,0,0.4)] border border-[#6b5d30] z-10" />
-                   
-                   <p className="font-handwritten text-xl text-book-text leading-relaxed text-center mt-3 relative z-10">
-                     Never stop<br/>
-                     blooming,<br/>
-                     {birthday.name.split(" ")[0]}
-                   </p>
-                   <Heart className="w-4 h-4 mx-auto mt-1 text-book-accent/60 fill-book-accent/20 relative z-10" />
+              {/* ── HISTORY / SCRAPBOOK TAB ── */}
+              {activeTab === "history" && (
+                <div className="space-y-5">
+                  <h3 className="font-serif text-lg text-book-text flex items-center gap-3">
+                    <BookHeart className="w-4 h-4 text-book-accent/70" /> Memory Scrapbook
+                    <div className="h-px bg-book-border/40 flex-1" />
+                  </h3>
+
+                  {/* Existing entries */}
+                  <div className="space-y-3">
+                    {history.length > 0 ? (
+                      history.map((h) => (
+                        <div
+                          key={h.id}
+                          className="bg-book-cream border border-book-line rounded-sm px-4 py-3 shadow-[2px_3px_10px_rgba(0,0,0,0.08)]"
+                        >
+                          <div className="flex items-center gap-2 mb-1">
+                            <Clock className="w-3 h-3 text-book-muted" />
+                            <span className="text-[11px] uppercase tracking-[0.2em] font-serif text-book-muted">{h.year}</span>
+                          </div>
+                          <p className="font-handwritten text-lg md:text-xl text-book-text leading-snug">{h.message}</p>
+                          {h.giftGiven && (
+                            <p className="flex items-center gap-1.5 text-xs font-serif italic text-book-muted mt-1">
+                              <Gift className="w-3 h-3" /> Gave: {h.giftGiven}
+                            </p>
+                          )}
+                        </div>
+                      ))
+                    ) : (
+                      <p className="font-handwritten text-xl text-book-muted italic">
+                        No memories pressed here yet. Record your first below.
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Add entry form */}
+                  <form onSubmit={handleAddHistoryLog} className="space-y-3 border-t border-book-border/40 pt-4">
+                    <div className="flex gap-3">
+                      <Input
+                        type="number"
+                        value={newLogYear}
+                        onChange={(e) => setNewLogYear(e.target.value)}
+                        placeholder="Year"
+                        className="w-24 bg-transparent border-t-0 border-x-0 border-b border-book-border rounded-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-book-gold text-book-text font-serif"
+                      />
+                      <Input
+                        value={newLogGift}
+                        onChange={(e) => setNewLogGift(e.target.value)}
+                        placeholder="Gift given (optional)"
+                        className="flex-1 bg-transparent border-t-0 border-x-0 border-b border-book-border rounded-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-book-gold text-book-text font-serif"
+                      />
+                    </div>
+                    <textarea
+                      value={newLogMsg}
+                      onChange={(e) => setNewLogMsg(e.target.value)}
+                      placeholder="A memory from this year's celebration..."
+                      rows={2}
+                      className="flex min-h-[60px] w-full bg-transparent border-t-0 border-x-0 border-b border-book-border rounded-none focus:outline-none focus:border-book-gold text-book-text font-serif text-base resize-none"
+                    />
+                    <Button
+                      type="submit"
+                      className="bg-book-text hover:bg-book-text/90 text-book-cream rounded-full px-5 font-serif"
+                    >
+                      <Plus className="w-4 h-4 mr-2" /> Add Memory
+                    </Button>
+                  </form>
                 </div>
-              </div>
+              )}
+
             </div>
 
             {/* Bottom flourish */}
-            <div className="shrink-0 flex justify-center pt-4 pb-2">
+            <div className="shrink-0 flex justify-center pt-3 pb-1">
               <div className="floral-divider opacity-80" />
             </div>
           </div>
