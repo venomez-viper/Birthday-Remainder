@@ -447,135 +447,131 @@
 /* ═══════════════════════════════════════════════════════
    PHYSICAL BOOK TABS
    ═══════════════════════════════════════════════════════ */
-/* Soft floral cards on the right edge of the book */
 .book-tab {
   writing-mode: horizontal-tb;
-  padding: 10px 8px;
-  border-radius: 4px 14px 14px 4px;
+  padding: 12px 10px;
+  border-radius: 0 10px 10px 0;
   font-family: var(--font-serif);
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 500;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   cursor: pointer;
   transition: all 0.3s ease;
-  border: 1px solid rgba(201, 149, 107, 0.45);
+  border: 1px solid rgba(139, 126, 102, 0.6);
   border-left: none;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-  width: 70px;
-  height: 80px;
+  gap: 6px;
+  width: 72px;
+  height: 85px;
   text-align: center;
   position: relative;
-  background: linear-gradient(150deg, #fdf8ee 0%, #f4e9d4 100%);
-  color: #6b5b48;
-  box-shadow:
-    3px 3px 9px rgba(120, 80, 70, 0.18),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.45);
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5), inset -2px 0 5px rgba(255,255,255,0.2);
 }
 
-/* inner hairline + tiny floral dot accent */
 .book-tab::before {
   content: '';
   position: absolute;
-  inset: 4px;
-  border: 1px solid rgba(201, 149, 107, 0.22);
+  inset: 3px;
+  border: 1px dashed rgba(0,0,0,0.15);
   border-left: none;
-  border-radius: 3px 10px 10px 3px;
+  border-radius: 0 8px 8px 0;
   pointer-events: none;
-}
-.book-tab::after {
-  content: '';
-  position: absolute;
-  top: 7px;
-  right: 8px;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #f1c4d0, #c97e92);
-  opacity: 0.7;
 }
 
 .book-tab:hover {
   transform: translateX(6px);
-  filter: brightness(1.02);
-  box-shadow: 4px 4px 12px rgba(120, 80, 70, 0.24), inset 0 0 0 1px rgba(255,255,255,0.5);
+  filter: brightness(1.05);
 }
 
 .book-tab.active {
   transform: translateX(8px);
   z-index: 10;
   font-weight: 700;
-  color: #8b4c5e;
-  border-color: rgba(176, 98, 119, 0.5);
-  box-shadow: 5px 4px 14px rgba(150, 80, 100, 0.3), inset 0 0 0 1px rgba(255,255,255,0.6);
-}
-.book-tab.active::after {
-  opacity: 1;
+  box-shadow: 6px 4px 12px rgba(0, 0, 0, 0.6), inset -2px 0 5px rgba(255,255,255,0.3);
 }
 
-/* Soft per-section tints (all blush/sage/cream, no harsh colors) */
 .book-tab-index {
-  background: linear-gradient(150deg, #fdf8ee 0%, #e7eddc 100%);
+  background: linear-gradient(135deg, #c4cfb8 0%, #b2bc9d 100%);
+  color: #3d4a32;
 }
+
 .book-tab-add {
-  background: linear-gradient(150deg, #fdf3f4 0%, #f3dde1 100%);
+  background: linear-gradient(135deg, #e3c4c8 0%, #ccaaae 100%);
+  color: #5c353b;
 }
+
 .book-tab-calendar {
-  background: linear-gradient(150deg, #fdf8ee 0%, #f0e6d2 100%);
+  background: linear-gradient(135deg, #dacdc0 0%, #c4b5a4 100%);
+  color: #4a3e32;
 }
+
 .book-tab-settings {
-  background: linear-gradient(150deg, #fbf6f1 0%, #ece4e6 100%);
+  background: linear-gradient(135deg, #b0bcc4 0%, #90a0ae 100%);
+  color: #2b353f;
 }
 
 /* ═══════════════════════════════════════════════════════
    FLORAL CORNERS & DECORATIONS
    ═══════════════════════════════════════════════════════ */
-/* Watercolor floral corner artwork — soft-edged sprays of roses, blush
-   blooms and sage botanicals that blend into the aged-cream paper.
-   The same spray SVG is mirrored per corner via flips so the stems always
-   trail inward from the page edge. */
+/* Drawn page-corner flourishes (thin gold rules + accent dot) */
 .floral-corner-tl,
 .floral-corner-tr,
 .floral-corner-bl,
 .floral-corner-br {
+  position: absolute;
+  width: 42px;
+  height: 42px;
+  pointer-events: none;
+  opacity: 0.55;
+  z-index: 5;
+}
+.floral-corner-tl::after,
+.floral-corner-tr::after,
+.floral-corner-bl::after,
+.floral-corner-br::after {
   content: '';
   position: absolute;
-  width: 168px;
-  height: 168px;
-  pointer-events: none;
-  opacity: 0.85;
-  z-index: 1;
-  background-image: url('/textures/corner_spray.svg');
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
-  /* feather the outer edge so there is no hard rectangular boundary */
-  -webkit-mask-image: radial-gradient(120% 120% at 0% 0%, #000 58%, transparent 86%);
-  mask-image: radial-gradient(120% 120% at 0% 0%, #000 58%, transparent 86%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #c9956b;
 }
 .floral-corner-tl {
-  top: -6px;
-  left: -6px;
+  top: 16px;
+  left: 16px;
+  border-top: 1.5px solid #c9956b;
+  border-left: 1.5px solid #c9956b;
+  border-top-left-radius: 6px;
 }
+.floral-corner-tl::after { top: -2px; left: -2px; }
 .floral-corner-tr {
-  top: -6px;
-  right: -6px;
-  transform: scaleX(-1);
+  top: 16px;
+  right: 16px;
+  border-top: 1.5px solid #c9956b;
+  border-right: 1.5px solid #c9956b;
+  border-top-right-radius: 6px;
 }
+.floral-corner-tr::after { top: -2px; right: -2px; }
 .floral-corner-bl {
-  bottom: -6px;
-  left: -6px;
-  transform: scaleY(-1);
+  bottom: 16px;
+  left: 16px;
+  border-bottom: 1.5px solid #c9956b;
+  border-left: 1.5px solid #c9956b;
+  border-bottom-left-radius: 6px;
 }
+.floral-corner-bl::after { bottom: -2px; left: -2px; }
 .floral-corner-br {
-  bottom: -6px;
-  right: -6px;
-  transform: scale(-1, -1);
+  bottom: 16px;
+  right: 16px;
+  border-bottom: 1.5px solid #c9956b;
+  border-right: 1.5px solid #c9956b;
+  border-bottom-right-radius: 6px;
 }
+.floral-corner-br::after { bottom: -2px; right: -2px; }
 
 /* Drawn divider: hairline with a centered diamond */
 .floral-divider {
@@ -597,59 +593,6 @@
   height: 7px;
   background: #c9956b;
   transform: translate(-50%, -50%) rotate(45deg);
-}
-
-/* ═══════════════════════════════════════════════════════
-   FRAMED STAT CARDS (Today's Highlights, right diary page)
-   Cream panel, thin rose/gold border, soft floral corner accent
-   ═══════════════════════════════════════════════════════ */
-.stat-card {
-  position: relative;
-  background:
-    radial-gradient(120% 90% at 50% 0%, rgba(255, 255, 255, 0.55) 0%, transparent 65%),
-    linear-gradient(150deg, #fbf4e7 0%, #f3e8d2 100%);
-  border: 1px solid #d1c2a3;
-  border-radius: 8px;
-  box-shadow:
-    0 2px 8px rgba(120, 80, 70, 0.08),
-    inset 0 0 0 1px rgba(201, 149, 107, 0.18);
-  overflow: hidden;
-}
-/* inner hairline frame */
-.stat-card::before {
-  content: '';
-  position: absolute;
-  inset: 5px;
-  border: 1px solid rgba(201, 149, 107, 0.28);
-  border-radius: 5px;
-  pointer-events: none;
-  z-index: 1;
-}
-/* soft floral sprig in the top-right of each card */
-.stat-card::after {
-  content: '';
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  width: 64px;
-  height: 64px;
-  background-image: url('/textures/sprig_accent.svg');
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
-  opacity: 0.8;
-  transform: scaleX(-1);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Handwritten keepsake note card under the stat grid */
-.note-card {
-  position: relative;
-  background: linear-gradient(150deg, #fdf8ee 0%, #f6ecd6 100%);
-  border: 1px solid #e0d2b6;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(120, 80, 70, 0.08);
 }
 
 /* ═══════════════════════════════════════════════════════
