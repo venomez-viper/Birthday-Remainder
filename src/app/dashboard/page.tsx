@@ -279,6 +279,14 @@ export default function Home() {
 
   const handleSuccess = () => {
     setRefreshTrigger(prev => prev + 1)
+    // A soft pastel confetti burst to celebrate a new entry
+    confetti({
+      particleCount: 90,
+      spread: 75,
+      origin: { y: 0.6 },
+      scalar: 0.9,
+      colors: ['#e89bb0', '#c16a72', '#d4a9a9', '#c9956b', '#f7d6df'],
+    })
     handleBackToToc()
   }
 

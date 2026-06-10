@@ -273,10 +273,12 @@
    BOOK PAPER TEXTURES
    ═══════════════════════════════════════════════════════ */
 .book-page-bg {
-  background-color: #f5e6c8;
-  background-image: url('/textures/aged_paper.png');
-  background-size: cover;
-  background-blend-mode: multiply;
+  background-color: #fdf7ec;
+  background-image:
+    radial-gradient(120% 100% at 50% 0%, rgba(255, 255, 255, 0.6) 0%, transparent 60%),
+    url('/textures/aged_paper.png');
+  background-size: cover, cover;
+  background-blend-mode: soft-light;
 }
 
 .book-page-bg-light {
