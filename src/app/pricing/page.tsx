@@ -28,10 +28,11 @@ export default function PricingPage() {
         <div className="max-w-5xl mx-auto px-6 relative z-10">
           <motion.div initial="hidden" animate="visible" variants={fadeUp} className="text-center mb-16 flex flex-col items-center">
             <SparklesText 
-              text="Invest in Memories" 
               className="text-6xl md:text-8xl font-handwritten text-[#2d2418] mb-6"
               colors={{ first: "#8b4c5e", second: "#c9956b" }}
-            />
+            >
+              Invest in Memories
+            </SparklesText>
             <p className="text-xl font-serif text-[#6b5d4d] leading-relaxed max-w-2xl mx-auto mt-4">
               Choose the diary that fits your life. Our free edition is perfect for most, but the Keepsake Edition unlocks truly magical features.
             </p>

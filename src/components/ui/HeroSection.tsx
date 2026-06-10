@@ -35,16 +35,18 @@ export function HeroSection({
         {/* Large Typography Title */}
         <div className="space-y-1">
           <SparklesText 
-            text={title1} 
             className="text-7xl md:text-9xl lg:text-[10rem] font-handwritten text-[#2d2418] leading-[0.9] tracking-tight"
             colors={{ first: "#8b4c5e", second: "#c9956b" }}
-          />
+          >
+            {title1}
+          </SparklesText>
           <SparklesText 
-            text={title2} 
             className="text-7xl md:text-9xl lg:text-[10rem] font-handwritten leading-[0.9] tracking-tight"
             colors={{ first: title2Color, second: "#d4c5a9" }}
             style={{ color: title2Color }}
-          />
+          >
+            {title2}
+          </SparklesText>
         </div>
 
         {/* Subtitle */}

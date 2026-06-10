@@ -27,10 +27,11 @@ export default function FeaturesPage() {
         <div className="max-w-4xl mx-auto px-6 relative z-10">
           <motion.div initial="hidden" animate="visible" variants={fadeUp} className="text-center mb-24 flex flex-col items-center">
             <SparklesText 
-              text="Inside the Diary" 
               className="text-6xl md:text-8xl font-handwritten text-[#2d2418] mb-6"
               colors={{ first: "#8b4c5e", second: "#c9956b" }}
-            />
+            >
+              Inside the Diary
+            </SparklesText>
             <p className="text-xl font-serif text-[#6b5d4d] leading-relaxed max-w-2xl mx-auto mt-4">
               Discover the careful details and gentle touches that make keeping this diary a truly special experience.
             </p>
