@@ -52,9 +52,9 @@ const config: Config = {
         /* ── Book-specific palette (theme-independent) ── */
         "book-paper":     "#f5e6c8",
         "book-cream":     "#faf3e6",
-        "book-text":      "#4a3728",
+        "book-text":      "#3a2a1d",
         "book-accent":    "#8b4c5e",
-        "book-muted":     "#9a8b7a",
+        "book-muted":     "#6b5b48",
         "book-gold":      "#c9956b",
         "book-border":    "#d4c5a9",
         "book-highlight":  "#fff8ed",

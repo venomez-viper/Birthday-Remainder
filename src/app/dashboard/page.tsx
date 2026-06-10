@@ -451,9 +451,12 @@ export default function Home() {
             maxShadowOpacity={0.5}
             showCover={false}
             mobileScrollSupport={true}
+            clickEventForward={true}
+            useMouseEvents={true}
+            disableFlipByClick={true}
             className="book-scene mx-auto w-full h-full"
             ref={bookRef}
-            flippingTime={1000}
+            flippingTime={800}
             usePortrait={false}
           >
             {/* ══════════════════════════════════════════════
@@ -487,11 +490,12 @@ export default function Home() {
                   filteredBirthdays.map((b) => {
                     const isToday = b.daysUntil === 0
                     return (
-                      <div 
-                        key={b.id} 
-                        onClick={() => handleSelectBday(b)} 
+                      <button
+                        type="button"
+                        key={b.id}
+                        onClick={() => handleSelectBday(b)}
                         className={cn(
-                          "flex items-center text-lg md:text-xl font-serif cursor-pointer group transition-all duration-200 py-2 px-3 rounded-md", 
+                          "w-full text-left flex items-center text-lg md:text-xl font-serif cursor-pointer group transition-all duration-200 py-2 px-3 rounded-md",
                           isToday ? "bg-book-sage/70 shadow-sm" : "hover:bg-book-cream/50"
                         )}
                       >
@@ -503,7 +507,7 @@ export default function Home() {
                         <span className="font-medium text-book-text group-hover:text-book-accent transition-colors truncate">{b.name}</span>
                         <span className="dotted-leader opacity-50" />
                         <span className="text-book-muted text-base md:text-lg whitespace-nowrap">{format(new Date(b.date), "MMM dd")}</span>
-                      </div>
+                      </button>
                     )
                   })
                 )}
@@ -747,7 +751,7 @@ export default function Home() {
         {/* ═══════════════════════════════════════════════════════
             PHYSICAL TABS (right edge, desktop only)
             ═══════════════════════════════════════════════════════ */}
-        <div className="hidden md:flex absolute right-0 top-8 translate-x-full flex-col gap-1.5 z-30">
+        <div className="hidden md:flex fixed right-0 top-1/2 -translate-y-1/2 flex-col gap-1.5 z-40">
           <button onClick={() => goToPage(0, "index")} className={cn("book-tab book-tab-index", section === "index" && "active")}>
             <BookOpen className="w-4 h-4" />
             <span>Index</span>
