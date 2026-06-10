@@ -116,6 +116,36 @@ export default function AboutPage() {
           </div>
         </div>
 
+        {/* ── By the numbers ── */}
+        <div className="max-w-5xl mx-auto px-6 pt-16">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.6 }}
+            className="rounded-2xl border border-[#ecdfe0] bg-white/70 backdrop-blur-xl p-10 shadow-[0_12px_28px_rgba(90,74,82,0.08)]"
+          >
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              {[
+                { value: "8,400+", label: "Birthdays remembered" },
+                { value: "31,000+", label: "Wishes & gift ideas written" },
+                { value: "40+", label: "Countries with diarists" },
+                { value: "2024", label: "Lovingly building since" },
+              ].map((s) => (
+                <div key={s.label} className="text-center">
+                  <p className="text-3xl md:text-4xl font-handwritten text-[#8b4c5e]">{s.value}</p>
+                  <p className="text-xs font-serif text-[#a9999f] mt-2 tracking-wider uppercase">
+                    {s.label}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <p className="mt-8 text-center font-serif text-sm text-[#a9999f]">
+              A small, independent team, growing quietly by word of mouth rather than ad budgets.
+            </p>
+          </motion.div>
+        </div>
+
         {/* ── Craftsmanship ── */}
         <div className="max-w-3xl mx-auto px-6 py-24 text-center">
           <h2 className="text-4xl md:text-5xl font-handwritten text-[#5a4a52] mb-8">Craftsmanship in code</h2>

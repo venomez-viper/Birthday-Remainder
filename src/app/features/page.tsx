@@ -5,6 +5,8 @@ import { Footer } from "@/components/layout/Footer"
 import { AnimatedBackground } from "@/components/ui/AnimatedBackground"
 import { SparklesText } from "@/components/ui/sparkles-text"
 import { BentoGrid, BentoCard } from "@/components/ui/bento-grid"
+import { DiaryPreview } from "@/components/ui/DiaryPreview"
+import { FaqAccordion } from "@/components/ui/FaqAccordion"
 import { MarketingNav } from "@/components/layout/MarketingNav"
 import Link from "next/link"
 import { ArrowRight, BookOpen, Sparkles, Bell, Image as ImageIcon } from "lucide-react"
@@ -77,6 +79,29 @@ const features = [
   },
 ]
 
+const featureFaqs = [
+  {
+    question: "What can the writing assistant actually do?",
+    answer:
+      "Powered by Google's Gemini, it drafts a birthday wish or a short list of gift ideas for any person on your list. Choose a tone, heartfelt, funny, or poetic, then edit and save whatever you like. It's a head start, never a send-without-reading.",
+  },
+  {
+    question: "How far in advance do reminders arrive?",
+    answer:
+      "By default, the day before. On the Keepsake plan you can set your own lead time, a week out, for example, so there's time to order a gift or plan a surprise.",
+  },
+  {
+    question: "Do you really do zodiac and star-sign insights?",
+    answer:
+      "Yes. Each person's page shows their star sign based on their date, a gentle little detail that often gives you something warm to write about in a card.",
+  },
+  {
+    question: "Can I see my birthdays in my own calendar?",
+    answer:
+      "You can export your birthdays to Apple or Google Calendar, so they sit right alongside the rest of your life and travel with you across devices.",
+  },
+]
+
 export default function FeaturesPage() {
   return (
     <div className="min-h-screen bg-[#fbf6f2] text-[#5a4a52] overflow-x-hidden flex flex-col">
@@ -108,12 +133,48 @@ export default function FeaturesPage() {
             </BentoGrid>
           </motion.div>
 
+          {/* ── Product preview mockup ── */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.6 }}
-            className="text-center mt-20"
+            className="mt-28"
+          >
+            <div className="text-center max-w-2xl mx-auto mb-14">
+              <h2 className="text-4xl md:text-5xl font-handwritten text-[#5a4a52] mb-5">
+                See it all come together
+              </h2>
+              <p className="font-serif text-[#8b7a80] text-lg leading-relaxed">
+                A page for every person, a reminder before every date, and a kind word ready
+                whenever you need one.
+              </p>
+            </div>
+            <DiaryPreview />
+          </motion.div>
+
+          {/* ── FAQ ── */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.6 }}
+            className="mt-28"
+          >
+            <div className="text-center max-w-2xl mx-auto mb-12">
+              <h2 className="text-4xl md:text-5xl font-handwritten text-[#5a4a52] mb-5">
+                Feature questions, answered
+              </h2>
+            </div>
+            <FaqAccordion items={featureFaqs} />
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.6 }}
+            className="text-center mt-24"
           >
             <Link
               href="/register"
