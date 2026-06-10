@@ -35,11 +35,11 @@ export default function FeaturesPage() {
             {/* Feature 1 */}
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} className="grid md:grid-cols-2 gap-12 items-center">
               <div className="bg-[#8b4c5e]/5 rounded-3xl p-8 border border-[#8b4c5e]/20 aspect-square flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800&q=80&auto=format')] bg-cover bg-center opacity-40 mix-blend-multiply" />
+                <div className="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-multiply" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800&q=80&auto=format')" }} />
                 <BookOpen className="w-24 h-24 text-[#8b4c5e] relative z-10 drop-shadow-lg" />
               </div>
               <div className="space-y-6">
-                <h2 className="text-4xl font-handwritten text-[#2d2418]">A Handcrafted Feel</h2>
+                <h2 className="text-6xl md:text-7xl font-handwritten text-[#2d2418]">A Handcrafted Feel</h2>
                 <p className="text-lg font-serif text-[#6b5d4d] leading-relaxed">
                   We created an authentic reading experience that feels just like holding a real physical book. Every person you care about gets their own beautiful page to celebrate their life.
                 </p>
@@ -54,11 +54,11 @@ export default function FeaturesPage() {
             {/* Feature 2 */}
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} className="grid md:grid-cols-2 gap-12 items-center md:[direction:rtl]">
               <div className="md:[direction:ltr] bg-[#c9956b]/5 rounded-3xl p-8 border border-[#c9956b]/20 aspect-square flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1505322022379-7c3353ee6291?w=800&q=80&auto=format')] bg-cover bg-center opacity-40 mix-blend-multiply" />
+                <div className="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-multiply" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1505322022379-7c3353ee6291?w=800&q=80&auto=format')" }} />
                 <Sparkles className="w-24 h-24 text-[#c9956b] relative z-10 drop-shadow-lg" />
               </div>
               <div className="space-y-6 md:[direction:ltr]">
-                <h2 className="text-4xl font-handwritten text-[#2d2418]">Perfect Words Every Time</h2>
+                <h2 className="text-6xl md:text-7xl font-handwritten text-[#2d2418]">Perfect Words Every Time</h2>
                 <p className="text-lg font-serif text-[#6b5d4d] leading-relaxed">
                   When you are not sure what to say, our smart assistant helps you find the right words. Whether you want something deeply heartfelt or just a bit funny, we will help you write a beautiful message in seconds.
                 </p>
@@ -73,11 +73,11 @@ export default function FeaturesPage() {
             {/* Feature 3 */}
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} className="grid md:grid-cols-2 gap-12 items-center">
               <div className="bg-[#6b8f71]/5 rounded-3xl p-8 border border-[#6b8f71]/20 aspect-square flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1516562309708-05f43a08b98b?w=800&q=80&auto=format')] bg-cover bg-center opacity-40 mix-blend-multiply" />
+                <div className="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-multiply" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1516562309708-05f43a08b98b?w=800&q=80&auto=format')" }} />
                 <Bell className="w-24 h-24 text-[#6b8f71] relative z-10 drop-shadow-lg" />
               </div>
               <div className="space-y-6">
-                <h2 className="text-4xl font-handwritten text-[#2d2418]">Gentle Reminders</h2>
+                <h2 className="text-6xl md:text-7xl font-handwritten text-[#2d2418]">Gentle Reminders</h2>
                 <p className="text-lg font-serif text-[#6b5d4d] leading-relaxed">
                   We believe a reminder on the actual day is simply too late. We will gently let you know a few days in advance so you have plenty of time to plan a thoughtful surprise.
                 </p>

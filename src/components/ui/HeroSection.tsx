@@ -30,18 +30,6 @@ export function HeroSection({
       {/* Left Content Area */}
       <div className="space-y-8 relative z-10">
         
-        {/* Sparkle Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
-        >
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#8b4c5e]/10 text-[#8b4c5e] text-xs font-serif tracking-wider uppercase border border-[#8b4c5e]/20 shadow-sm backdrop-blur-md">
-            <Sparkles className="w-3.5 h-3.5" />
-            Designed for Memories
-          </span>
-        </motion.div>
-
         {/* Large Typography Title */}
         <div className="space-y-1">
           <motion.h1

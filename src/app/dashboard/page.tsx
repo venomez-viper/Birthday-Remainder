@@ -484,7 +484,7 @@ export default function Home() {
                         <div key={b.id} className="cursor-pointer group" onClick={() => handleSelectBday(b)}>
                           <div className="flex items-center justify-center gap-4">
                             <Heart className="w-5 h-5 text-book-accent/40 group-hover:text-book-accent transition-colors" />
-                            <h3 className="font-handwritten text-6xl md:text-8xl text-book-accent font-bold group-hover:scale-105 transition-transform drop-shadow-sm">
+                            <h3 className="font-handwritten text-5xl md:text-7xl text-book-accent font-bold group-hover:scale-105 transition-transform drop-shadow-sm break-words leading-tight max-w-full text-center">
                               {b.name}
                             </h3>
                             <Heart className="w-5 h-5 text-book-accent/40 group-hover:text-book-accent transition-colors" />
@@ -502,7 +502,7 @@ export default function Home() {
                       <div className="cursor-pointer group" onClick={() => handleSelectBday(nextBirthday)}>
                          <div className="flex items-center justify-center gap-4">
                             <Heart className="w-5 h-5 text-book-accent/40 group-hover:text-book-accent transition-colors" />
-                            <h3 className="font-handwritten text-6xl md:text-8xl text-book-accent font-bold group-hover:scale-105 transition-transform drop-shadow-sm">
+                            <h3 className="font-handwritten text-5xl md:text-7xl text-book-accent font-bold group-hover:scale-105 transition-transform drop-shadow-sm break-words leading-tight max-w-full text-center">
                               {nextBirthday.name}
                             </h3>
                             <Heart className="w-5 h-5 text-book-accent/40 group-hover:text-book-accent transition-colors" />
