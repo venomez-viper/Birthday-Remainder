@@ -59,13 +59,16 @@ export function CalendarLedger({ birthdays, month }: { birthdays: Bday[]; month:
           <p className="text-sm text-book-muted font-serif italic py-10 text-center">No birthdays this month.</p>
         ) : (
           inMonth.map(b => (
-            <div key={b.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-book-cream/60 transition-colors">
-              <Avatar b={b} size={36} />
+            <div key={b.id} className="flex items-center gap-3 p-2 rounded-xl hover:bg-book-cream/60 transition-colors">
+              <div className="w-11 h-11 rounded-lg bg-book-cream border border-book-line flex flex-col items-center justify-center shrink-0 shadow-sm">
+                <span className="text-[7px] uppercase tracking-wider text-book-muted leading-none">{format(new Date(b.date), "MMM")}</span>
+                <span className="font-serif text-lg text-book-text leading-tight">{format(new Date(b.date), "d")}</span>
+              </div>
+              <Avatar b={b} size={34} />
               <div className="min-w-0 flex-1">
                 <span className="block font-serif font-bold text-book-text text-sm truncate">{b.name}</span>
-                <span className="block text-[11px] text-book-muted capitalize">{b.relationship || "friend"}</span>
+                <span className="block text-[11px] text-book-muted capitalize">{b.relationship || "friend"} · {getZodiac(b.date).name}</span>
               </div>
-              <span className="font-serif text-sm text-book-muted">{format(new Date(b.date), "MMM d")}</span>
             </div>
           ))
         )}
@@ -108,24 +111,31 @@ export function CalendarGrid({
           const list = dayBdays(day)
           const isCur = isSameMonth(day, month)
           const isToday = isSameDay(day, new Date())
+          const hasBday = list.length > 0
           return (
             <button
               key={idx}
               onClick={() => onPick(day)}
+              title={hasBday ? list.map(b => b.name).join(", ") : undefined}
               className={cn(
-                "rounded-lg flex flex-col items-center justify-start p-1 transition-colors",
-                isCur ? "text-book-text hover:bg-book-cream/70" : "text-book-muted/40",
-                isToday && "bg-book-sage/40"
+                "relative rounded-lg border flex flex-col items-center justify-center gap-0.5 p-1 transition-all",
+                isCur ? "border-book-border/40 text-book-text hover:border-book-accent/50 hover:bg-book-cream/60" : "border-transparent text-book-muted/30",
+                hasBday && isCur && "bg-book-accent/10 border-book-accent/30 shadow-sm",
+                isToday && "ring-2 ring-book-accent/60 ring-offset-1 ring-offset-book-paper"
               )}
             >
-              <span className={cn("w-6 h-6 flex items-center justify-center rounded-full text-xs font-serif", isToday && "bg-book-accent text-white font-bold")}>
+              <span className={cn(
+                "w-6 h-6 flex items-center justify-center rounded-full text-xs font-serif",
+                isToday ? "bg-book-accent text-white font-bold" : hasBday && isCur && "text-book-accent font-bold"
+              )}>
                 {format(day, "d")}
               </span>
-              {list.length > 0 && (
-                <span className="mt-0.5 flex gap-0.5">
+              {hasBday && (
+                <span className="flex items-center gap-0.5">
                   {list.slice(0, 3).map(b => (
                     <span key={b.id} className="w-1.5 h-1.5 rounded-full bg-book-accent" />
                   ))}
+                  {list.length > 3 && <span className="text-[8px] text-book-accent font-bold leading-none">+{list.length - 3}</span>}
                 </span>
               )}
             </button>
